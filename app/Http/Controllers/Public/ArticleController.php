@@ -4,26 +4,33 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\ShopSetting;
 use Inertia\Inertia;
 
 class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::orderBy('published_at', 'desc')
-            ->paginate(9);
+        $articles = Article::published()->paginate(9);
+        $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Articles/Index', [
-            'articles' => $articles
+            'articles' => $articles,
+            'shopSettings' => $shopSettings,
         ]);
     }
 
     public function show(string $slug)
     {
-        $article = Article::where('slug', $slug)->firstOrFail();
+        $article = Article::where('slug', $slug)
+            ->published()
+            ->firstOrFail();
+
+        $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Articles/Show', [
-            'article' => $article
+            'article' => $article,
+            'shopSettings' => $shopSettings,
         ]);
     }
 }

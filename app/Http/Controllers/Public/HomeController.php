@@ -13,25 +13,22 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        // Get hero articles (max 3)
-        $heroArticles = Article::heroArticles()
-            ->orderBy('published_at', 'desc')
-            ->take(3)
-            ->get();
+        $heroArticles = Article::hero()->get();
 
-        // Get top 8 products with primary images
         $topProducts = Product::with(['images' => function ($query) {
                 $query->where('is_primary', true);
             }])
+            ->where('is_published', true)
             ->orderBy('created_at', 'desc')
             ->take(8)
             ->get();
 
-        // Get reviews
-        $reviews = Review::orderBy('created_at', 'desc')->take(10)->get();
+        $reviews = Review::where('is_approved', true)
+            ->orderBy('created_at', 'desc')
+            ->take(9)
+            ->get();
 
-        // Get shop settings
-        $shopSettings = ShopSetting::first();
+        $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Home', [
             'heroArticles' => $heroArticles,

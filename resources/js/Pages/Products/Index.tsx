@@ -4,6 +4,7 @@ import PublicLayout from '@/Layouts/PublicLayout';
 import ProductCard from '@/Components/Public/ProductCard';
 import Pagination from '@/Components/Public/Pagination';
 import { Product, ShopSetting } from '@/types/mebel';
+import { RefreshCcw, Search, Sofa } from 'lucide-react';
 
 interface ProductsIndexProps {
     products: {
@@ -21,12 +22,18 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
     const waNumber = shopSettings?.whatsapp_number || '6281234567890';
     const waTemplate = shopSettings?.whatsapp_template || '';
 
+    const productsData = Array.isArray(products?.data) ? products.data : [];
+    const productsLinks = Array.isArray(products?.links) ? products.links : [];
+    const safeFilters = filters && typeof filters === 'object' ? filters : {};
+    const filterStockStatus = typeof safeFilters.stock_status === 'string' ? safeFilters.stock_status : '';
+    const filterSort = typeof safeFilters.sort === 'string' ? safeFilters.sort : '';
+
     const handleFilterChange = (key: string, value: string) => {
-        const newFilters = { ...filters, [key]: value };
-        
-        // Remove empty values
+        const newFilters: Record<string, string> = { ...safeFilters } as Record<string, string>;
+        newFilters[key] = value;
+
         if (!value) {
-            delete newFilters[key as keyof typeof newFilters];
+            delete newFilters[key];
         }
 
         router.get(route('products.index'), newFilters, {
@@ -35,6 +42,8 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
         });
     };
 
+    const hasActiveFilters = Boolean(filterStockStatus) || Boolean(filterSort) && filterSort !== 'newest';
+
     return (
         <PublicLayout>
             <Head>
@@ -42,9 +51,8 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
                 <meta name="description" content="Jelajahi koleksi lengkap furniture kayu jati premium kami. Tersedia kursi tamu, meja makan, tempat tidur, lemari, dll. Kualitas terjamin langsung dari Jepara." />
             </Head>
 
-            {/* Header Banner */}
             <div className="bg-stone-900 py-16 sm:py-20 text-center text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(#3e2723_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(#3e2723_1px,transparent_1px)] bg-size-[16px_16px] opacity-15"></div>
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
                     <span className="text-amber-500 font-extrabold uppercase tracking-widest text-[10px] bg-amber-950/40 px-3 py-1 rounded-md">Koleksi Jati Asli</span>
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Katalog Produk</h1>
@@ -52,35 +60,32 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
                 </div>
             </div>
 
-            {/* Catalog Grid + Filters */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex flex-col md:flex-row gap-8 items-start">
-                    
-                    {/* Filters Sidebar (Desktop) / Dropdowns (Mobile) */}
-                    <div className="w-full md:w-64 bg-white p-6 rounded-2xl border border-stone-200/60 shadow-sm space-y-6 flex-shrink-0">
-                        <h3 className="font-bold text-stone-900 border-b border-stone-150 pb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-                            <span>🔍</span> Filter & Urutkan
+
+                    <div className="w-full md:w-64 bg-white p-6 rounded-2xl border border-stone-200/60 shadow-sm space-y-6 shrink-0">
+                        <h3 className="font-bold text-stone-900 border-b border-stone-200 pb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <Search className="h-4 w-4" /> Filter & Urutkan
                         </h3>
 
-                        {/* Filter by Stock Status */}
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Status Stok</label>
                             <select
-                                value={filters.stock_status || ''}
+                                value={filterStockStatus}
                                 onChange={(e) => handleFilterChange('stock_status', e.target.value)}
                                 className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
                             >
                                 <option value="">Semua Status</option>
-                                <option value="ready_stock">Ready Stock</option>
-                                <option value="pre_order">Pre Order</option>
+                                <option value="available">Ready Stock</option>
+                                <option value="preorder">Pre Order</option>
+                                <option value="out_of_stock">Kosong</option>
                             </select>
                         </div>
 
-                        {/* Sort products */}
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Urutkan</label>
                             <select
-                                value={filters.sort || 'newest'}
+                                value={filterSort || 'newest'}
                                 onChange={(e) => handleFilterChange('sort', e.target.value)}
                                 className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
                             >
@@ -90,36 +95,37 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
                             </select>
                         </div>
 
-                        {/* Reset Filters */}
-                        {(filters.stock_status || filters.sort) && (
+                        {hasActiveFilters && (
                             <button
                                 onClick={() => router.get(route('products.index'))}
                                 className="w-full py-2 px-4 rounded-xl border border-amber-900 text-amber-900 hover:bg-amber-50 text-xs font-bold transition flex items-center justify-center gap-1.5"
                             >
-                                🔄 Bersihkan Filter
+                                <RefreshCcw className="h-3.5 w-3.5" />
+                                Bersihkan Filter
                             </button>
                         )}
                     </div>
 
-                    {/* Products Catalog Grid */}
-                    <div className="flex-grow w-full">
-                        {products.data && products.data.length > 0 ? (
+                    <div className="grow w-full">
+                        {productsData.length > 0 ? (
                             <>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {products.data.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            product={product}
-                                            whatsappNumber={waNumber}
-                                            whatsappTemplate={waTemplate}
-                                        />
+                                    {productsData.map((product) => (
+                                        product ? (
+                                            <ProductCard
+                                                key={product.id ?? Math.random()}
+                                                product={product}
+                                                whatsappNumber={waNumber}
+                                                whatsappTemplate={waTemplate}
+                                            />
+                                        ) : null
                                     ))}
                                 </div>
-                                <Pagination links={products.links} />
+                                <Pagination links={productsLinks} />
                             </>
                         ) : (
                             <div className="bg-white p-16 text-center rounded-2xl border border-stone-200/60 shadow-sm max-w-md mx-auto space-y-4">
-                                <span className="text-5xl block">🪑</span>
+                                <Sofa className="mx-auto h-12 w-12 text-amber-900" />
                                 <h3 className="text-lg font-bold text-stone-900">Produk Tidak Ditemukan</h3>
                                 <p className="text-stone-500 text-sm leading-relaxed">
                                     Maaf, tidak ada produk yang sesuai dengan kriteria pencarian Anda. Silakan ubah filter status atau urutan Anda.

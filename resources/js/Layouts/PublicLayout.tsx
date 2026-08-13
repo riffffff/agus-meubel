@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    Clock3,
+    LogIn,
+    MapPin,
+    MessageCircle,
+    Menu,
+    Phone,
+    Sofa,
+    X,
+} from 'lucide-react';
+import { PageProps } from '@/types';
 
 interface PublicLayoutProps {
     children: React.ReactNode;
 }
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
+    const { shopSettings } = usePage<PageProps>().props;
+    const waNumber = shopSettings?.whatsapp_number || '6281234567890';
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const formatWaDisplay = (num: string) => {
+        if (num.startsWith('62')) {
+            const rest = num.slice(2);
+            return `+62 ${rest.slice(0, 3)}-${rest.slice(3, 7)}-${rest.slice(7)}`;
+        }
+        return num;
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans selection:bg-amber-900 selection:text-white">
@@ -15,9 +36,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-20 items-center">
                         {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center">
+                        <div className="shrink-0 flex items-center">
                             <Link href={route('home')} className="flex items-center gap-2 group">
-                                <span className="text-2xl font-bold bg-gradient-to-r from-amber-900 to-amber-950 bg-clip-text text-transparent group-hover:from-amber-800 group-hover:to-amber-900 transition duration-300">
+                                <Sofa className="h-5 w-5 text-amber-900 transition duration-300 group-hover:scale-105" />
+                                <span className="text-2xl font-bold bg-linear-to-r from-amber-900 to-amber-950 bg-clip-text text-transparent group-hover:from-amber-800 group-hover:to-amber-900 transition duration-300">
                                     Agus Mebel
                                 </span>
                                 <span className="bg-emerald-800 text-white text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">
@@ -60,25 +82,6 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             </Link>
                         </nav>
 
-                        {/* CTA / Contact */}
-                        <div className="hidden md:flex items-center gap-4">
-                            <Link
-                                href={route('login')}
-                                className="text-sm font-semibold text-stone-600 hover:text-amber-900 transition"
-                            >
-                                Area Admin
-                            </Link>
-                            <a
-                                href="https://wa.me/6281234567890"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-white bg-emerald-850 hover:bg-emerald-800 transition duration-300 rounded-xl shadow-md shadow-emerald-800/10 hover:shadow-lg hover:-translate-y-0.5 transform"
-                                style={{ backgroundColor: '#075E54' }}
-                            >
-                                Hubungi Kami
-                            </a>
-                        </div>
-
                         {/* Mobile Menu Button */}
                         <div className="flex md:hidden">
                             <button
@@ -86,28 +89,11 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 className="inline-flex items-center justify-center p-2 rounded-xl text-stone-500 hover:text-stone-900 hover:bg-stone-100 focus:outline-none transition"
                                 aria-label="Toggle menu"
                             >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    {isMenuOpen ? (
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M6 18L18 6M6 6l12 12"
-                                        />
-                                    ) : (
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M4 6h16M4 12h16M4 18h16"
-                                        />
-                                    )}
-                                </svg>
+                                {isMenuOpen ? (
+                                    <X className="h-6 w-6" />
+                                ) : (
+                                    <Menu className="h-6 w-6" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -147,20 +133,16 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             >
                                 Artikel & Info
                             </Link>
-                            <Link
-                                href={route('login')}
-                                className="block px-3 py-2 rounded-xl text-base font-semibold text-stone-600 hover:bg-stone-50 hover:text-stone-900"
-                            >
-                                Area Admin
-                            </Link>
+
                             <div className="px-3 pt-3">
                                 <a
-                                    href="https://wa.me/6281234567890"
+                                    href={`https://wa.me/${waNumber}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-full flex items-center justify-center px-4 py-2.5 rounded-xl text-white font-bold text-center shadow-md"
                                     style={{ backgroundColor: '#075E54' }}
                                 >
+                                    <MessageCircle className="mr-2 h-4 w-4" />
                                     Hubungi Kami
                                 </a>
                             </div>
@@ -170,17 +152,17 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             </header>
 
             {/* Main Content */}
-            <main className="flex-grow">
+            <main className="grow">
                 {children}
             </main>
 
             {/* Footer */}
-            <footer className="bg-stone-950 text-stone-400 border-t border-stone-850">
+            <footer className="bg-stone-950 text-stone-400 border-t border-stone-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                         {/* Column 1: Info Toko */}
                         <div className="md:col-span-2 space-y-6">
-                            <span className="text-2xl font-bold bg-gradient-to-r from-amber-100 to-amber-300 bg-clip-text text-transparent">
+                            <span className="text-2xl font-bold bg-linear-to-r from-amber-100 to-amber-300 bg-clip-text text-transparent">
                                 Agus Mebel Jepara
                             </span>
                             <p className="text-stone-400 text-sm leading-relaxed max-w-md">
@@ -188,10 +170,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             </p>
                             <div className="flex gap-4">
                                 {/* WhatsApp */}
-                                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-stone-900 hover:bg-emerald-900/40 text-stone-300 hover:text-emerald-400 flex items-center justify-center transition duration-300">
-                                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.731-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.45 5.436.002 9.852-4.41 9.855-9.852.002-2.637-1.023-5.114-2.883-6.976C16.381 1.916 13.91 .89 11.272.89c-5.433 0-9.85 4.417-9.853 9.856 0 1.562.488 3.09 1.41 4.481L1.8 20.353l5.05-1.325c-.244-.132-.244-.132.207.126z"/>
-                                    </svg>
+                                <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-stone-900 hover:bg-emerald-900/40 text-stone-300 hover:text-emerald-400 flex items-center justify-center transition duration-300">
+                                    <MessageCircle className="w-5 h-5" />
                                 </a>
                             </div>
                         </div>
@@ -222,16 +202,16 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                         <div className="space-y-4">
                             <h3 className="text-stone-200 font-bold text-sm uppercase tracking-wider">Kontak</h3>
                             <ul className="space-y-2.5 text-sm">
-                                <li className="flex gap-2">
-                                    <span className="text-amber-500">📍</span>
+                                <li className="flex gap-2 items-start">
+                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                     <span>Jepara, Jawa Tengah, Indonesia</span>
                                 </li>
-                                <li className="flex gap-2">
-                                    <span className="text-amber-500">📞</span>
-                                    <span>+62 812-3456-7890</span>
+                                <li className="flex gap-2 items-start">
+                                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                                    <span>{formatWaDisplay(waNumber)}</span>
                                 </li>
-                                <li className="flex gap-2">
-                                    <span className="text-amber-500">⏰</span>
+                                <li className="flex gap-2 items-start">
+                                    <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
                                     <span>Senin - Sabtu: 08:00 - 17:00</span>
                                 </li>
                             </ul>

@@ -14,14 +14,15 @@ class ProductController extends Controller
     {
         $query = Product::with(['images' => function ($query) {
             $query->where('is_primary', true);
-        }]);
+        }])->where('is_published', true);
 
-        // Filter stock status
         if ($request->filled('stock_status')) {
-            $query->where('stock_status', $request->stock_status);
+            $allowedStatus = ['available', 'preorder', 'out_of_stock'];
+            if (in_array($request->stock_status, $allowedStatus, true)) {
+                $query->where('stock_status', $request->stock_status);
+            }
         }
 
-        // Sorting
         $sort = $request->input('sort', 'newest');
         if ($sort === 'price_low') {
             $query->orderBy('price', 'asc');
@@ -32,7 +33,7 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(12)->withQueryString();
-        $shopSettings = ShopSetting::first();
+        $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Products/Index', [
             'products' => $products,
@@ -43,8 +44,12 @@ class ProductController extends Controller
 
     public function show(string $slug)
     {
-        $product = Product::with('images')->where('slug', $slug)->firstOrFail();
-        $shopSettings = ShopSetting::first();
+        $product = Product::with('images')
+            ->where('slug', $slug)
+            ->where('is_published', true)
+            ->firstOrFail();
+
+        $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Products/Show', [
             'product' => $product,

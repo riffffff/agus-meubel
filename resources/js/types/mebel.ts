@@ -1,42 +1,73 @@
+export type StockStatus = 'available' | 'preorder' | 'out_of_stock';
+
 export interface Product {
   id: number;
   name: string;
   slug: string;
-  description: string;       // rich text / konten panjang
-  short_description: string; // untuk kartu di list & halaman utama
-  price: number;             // integer, dalam Rupiah
-  stock_status: 'ready_stock' | 'pre_order';
+  category?: string | null;
+  description: string;
+  short_description: string;
+  price: number;
+  stock_status: StockStatus;
+  dimensions?: Array<{ label: string; value: string }> | null;
+  materials?: Array<{ name: string }> | null;
+  finishes?: Array<{ option: string }> | null;
+  tags?: string[] | null;
+  weight_kg?: number | null;
+  assembly_required?: boolean;
+  warranty_months?: number | null;
+  is_published?: boolean;
   images: ProductImage[];
   created_at: string;
+  updated_at?: string;
 }
 
 export interface ProductImage {
   id: number;
+  product_id?: number;
   url: string;
-  is_primary: boolean;  // gambar utama untuk thumbnail kartu
+  is_primary: boolean;
+  sort_order?: number;
+  created_at?: string;
 }
 
 export interface Article {
   id: number;
   title: string;
   slug: string;
-  content: string;   // rich text
-  excerpt: string;   // ringkasan pendek untuk kartu & hero section
-  image: string;     // URL gambar utama (sudah dikonversi ke .webp)
+  content: string;
+  excerpt: string;
+  image: string;
   is_hero: boolean;
-  published_at: string;
+  is_published?: boolean;
+  published_at: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Review {
   id: number;
+  product_id?: number | null;
   name: string;
   city: string;
   rating: 1 | 2 | 3 | 4 | 5;
   review: string;
+  is_approved?: boolean;
+  created_at?: string;
 }
 
 export interface ShopSetting {
   id?: number;
-  whatsapp_number: string;   // format: 628xxxxxxxxx
-  whatsapp_template: string; // template pesan dengan placeholder
+  shop_name?: string | null;
+  address?: string | null;
+  whatsapp_number: string;
+  whatsapp_template: string;
+  operating_hours?: string | null;
+  hero_banner_text_1?: string | null;
+  hero_banner_text_2?: string | null;
+  hero_banner_bg?: string | null;
+  shipping_areas?: string[] | null;
+  shipping_estimate_days?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
