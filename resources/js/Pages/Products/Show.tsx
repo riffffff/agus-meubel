@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import ScrollReveal from '@/Components/Public/ScrollReveal';
 import { Product, ShopSetting } from '@/types/mebel';
 import { MessageCircle, ShoppingCart, UserPlus, LogIn, Lock, Minus, Plus, AlertCircle } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
@@ -88,7 +89,7 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                 <meta name="description" content={metaDescription} />
             </Head>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 <nav className="text-xs sm:text-sm text-stone-500 mb-6 flex items-center gap-2" aria-label="Breadcrumb">
                     <Link href={route('home')} className="hover:text-amber-900 transition">Beranda</Link>
                     <span>/</span>
@@ -98,7 +99,7 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                 </nav>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                    <div className="lg:col-span-7 space-y-4">
+                    <ScrollReveal direction="left" className="lg:col-span-7 space-y-4">
                         <div className="aspect-square bg-stone-100 rounded-2xl overflow-hidden border border-stone-200/60 shadow-xs relative">
                             <img
                                 src={activeImageUrl}
@@ -150,9 +151,9 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                                 })}
                             </div>
                         )}
-                    </div>
+                    </ScrollReveal>
 
-                    <div className="lg:col-span-5 space-y-6">
+                    <ScrollReveal direction="right" className="lg:col-span-5 space-y-6">
                         <div className="space-y-1.5">
                             <span className="text-amber-900 font-extrabold uppercase tracking-wider text-xs block">Mebel Jati Premium</span>
                             <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-950 tracking-tight leading-tight">
@@ -296,11 +297,11 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                                 </div>
                             </form>
                         )}
-                    </div>
+                    </ScrollReveal>
                 </div>
 
                 {productDescription && (
-                    <div className="mt-14 pt-10 border-t border-stone-200/80">
+                    <ScrollReveal direction="up" className="mt-14 pt-10 border-t border-stone-200/80">
                         <h2 className="text-lg font-extrabold text-stone-900 mb-4 border-l-4 border-amber-900 pl-3">
                             Deskripsi Produk
                         </h2>
@@ -308,7 +309,7 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                             className="prose prose-stone max-w-none text-stone-600 leading-relaxed text-sm space-y-3"
                             dangerouslySetInnerHTML={{ __html: productDescription }}
                         />
-                    </div>
+                    </ScrollReveal>
                 )}
             </div>
 

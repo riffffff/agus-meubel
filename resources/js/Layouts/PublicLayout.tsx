@@ -50,7 +50,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         <div className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans selection:bg-amber-900 selection:text-white">
             {/* Header / Navbar */}
             <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-20 items-center">
                         {/* Logo & Shop Name */}
                         <div className="shrink-0 flex items-center">
@@ -292,7 +292,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
             {/* Footer */}
             <footer className="bg-stone-950 text-stone-400 border-t border-stone-900">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                         {/* Column 1: Info Toko (Dynamic from shopSettings) */}
                         <div className="md:col-span-2 space-y-6">

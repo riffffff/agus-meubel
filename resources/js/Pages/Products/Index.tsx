@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import ProductCard from '@/Components/Public/ProductCard';
 import Pagination from '@/Components/Public/Pagination';
+import ScrollReveal from '@/Components/Public/ScrollReveal';
 import { Product, ShopSetting } from '@/types/mebel';
 import { RefreshCcw, Search, Sofa } from 'lucide-react';
 
@@ -53,90 +54,95 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
 
             <div className="bg-stone-900 py-16 sm:py-20 text-center text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(#3e2723_1px,transparent_1px)] bg-size-[16px_16px] opacity-15"></div>
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+                <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
                     <span className="text-amber-500 font-extrabold uppercase tracking-widest text-[10px] bg-amber-950/40 px-3 py-1 rounded-md">Koleksi Jati Asli</span>
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Katalog Produk</h1>
                     <p className="text-sm sm:text-base text-stone-300 max-w-2xl mx-auto leading-relaxed">Pilih dari ratusan desain furniture jepara berkualitas tinggi untuk melengkapi keindahan setiap ruangan rumah Anda.</p>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="flex flex-col md:flex-row gap-8 items-start">
 
-                    <div className="w-full md:w-64 bg-white p-6 rounded-2xl border border-stone-200/60 shadow-sm space-y-6 shrink-0">
-                        <h3 className="font-bold text-stone-900 border-b border-stone-200 pb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
-                            <Search className="h-4 w-4" /> Filter & Urutkan
-                        </h3>
+                    <ScrollReveal direction="left" className="w-full md:w-64 shrink-0">
+                        <div className="bg-white p-6 rounded-2xl border border-stone-200/60 shadow-sm space-y-6">
+                            <h3 className="font-bold text-stone-900 border-b border-stone-200 pb-3 flex items-center gap-2 text-sm uppercase tracking-wider">
+                                <Search className="h-4 w-4" /> Filter & Urutkan
+                            </h3>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Status Stok</label>
-                            <select
-                                value={filterStockStatus}
-                                onChange={(e) => handleFilterChange('stock_status', e.target.value)}
-                                className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
-                            >
-                                <option value="">Semua Status</option>
-                                <option value="available">Ready Stock</option>
-                                <option value="preorder">Pre Order</option>
-                                <option value="out_of_stock">Kosong</option>
-                            </select>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Status Stok</label>
+                                <select
+                                    value={filterStockStatus}
+                                    onChange={(e) => handleFilterChange('stock_status', e.target.value)}
+                                    className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
+                                >
+                                    <option value="">Semua Status</option>
+                                    <option value="available">Ready Stock</option>
+                                    <option value="preorder">Pre Order</option>
+                                    <option value="out_of_stock">Kosong</option>
+                                </select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Urutkan</label>
+                                <select
+                                    value={filterSort || 'newest'}
+                                    onChange={(e) => handleFilterChange('sort', e.target.value)}
+                                    className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
+                                >
+                                    <option value="newest">Terbaru</option>
+                                    <option value="price_low">Harga Terendah</option>
+                                    <option value="price_high">Harga Tertinggi</option>
+                                </select>
+                            </div>
+
+                            {hasActiveFilters && (
+                                <button
+                                    onClick={() => router.get(route('products.index'))}
+                                    className="w-full py-2 px-4 rounded-xl border border-amber-900 text-amber-900 hover:bg-amber-50 text-xs font-bold transition flex items-center justify-center gap-1.5"
+                                >
+                                    <RefreshCcw className="h-3.5 w-3.5" />
+                                    Bersihkan Filter
+                                </button>
+                            )}
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-stone-400 uppercase tracking-wider block">Urutkan</label>
-                            <select
-                                value={filterSort || 'newest'}
-                                onChange={(e) => handleFilterChange('sort', e.target.value)}
-                                className="w-full rounded-xl border-stone-200 text-stone-700 bg-stone-50/50 focus:border-amber-900 focus:ring-amber-900/10 text-sm py-2.5 transition"
-                            >
-                                <option value="newest">Terbaru</option>
-                                <option value="price_low">Harga Terendah</option>
-                                <option value="price_high">Harga Tertinggi</option>
-                            </select>
-                        </div>
-
-                        {hasActiveFilters && (
-                            <button
-                                onClick={() => router.get(route('products.index'))}
-                                className="w-full py-2 px-4 rounded-xl border border-amber-900 text-amber-900 hover:bg-amber-50 text-xs font-bold transition flex items-center justify-center gap-1.5"
-                            >
-                                <RefreshCcw className="h-3.5 w-3.5" />
-                                Bersihkan Filter
-                            </button>
-                        )}
-                    </div>
+                    </ScrollReveal>
 
                     <div className="grow w-full">
                         {productsData.length > 0 ? (
                             <>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {productsData.map((product) => (
+                                    {productsData.map((product, index) => (
                                         product ? (
-                                            <ProductCard
-                                                key={product.id ?? Math.random()}
-                                                product={product}
-                                                whatsappNumber={waNumber}
-                                                whatsappTemplate={waTemplate}
-                                            />
+                                            <ScrollReveal key={product.id ?? index} delay={(index % 3) * 150} direction="up">
+                                                <ProductCard
+                                                    product={product}
+                                                    whatsappNumber={waNumber}
+                                                    whatsappTemplate={waTemplate}
+                                                />
+                                            </ScrollReveal>
                                         ) : null
                                     ))}
                                 </div>
                                 <Pagination links={productsLinks} />
                             </>
                         ) : (
-                            <div className="bg-white p-16 text-center rounded-2xl border border-stone-200/60 shadow-sm max-w-md mx-auto space-y-4">
-                                <Sofa className="mx-auto h-12 w-12 text-amber-900" />
-                                <h3 className="text-lg font-bold text-stone-900">Produk Tidak Ditemukan</h3>
-                                <p className="text-stone-500 text-sm leading-relaxed">
-                                    Maaf, tidak ada produk yang sesuai dengan kriteria pencarian Anda. Silakan ubah filter status atau urutan Anda.
-                                </p>
-                                <button
-                                    onClick={() => router.get(route('products.index'))}
-                                    className="px-5 py-2.5 bg-amber-900 hover:bg-amber-800 text-stone-100 font-bold rounded-xl shadow-md transition text-xs"
-                                >
-                                    Lihat Semua Produk
-                                </button>
-                            </div>
+                            <ScrollReveal direction="none">
+                                <div className="bg-white p-16 text-center rounded-2xl border border-stone-200/60 shadow-sm max-w-md mx-auto space-y-4">
+                                    <Sofa className="mx-auto h-12 w-12 text-amber-900" />
+                                    <h3 className="text-lg font-bold text-stone-900">Produk Tidak Ditemukan</h3>
+                                    <p className="text-stone-500 text-sm leading-relaxed">
+                                        Maaf, tidak ada produk yang sesuai dengan kriteria pencarian Anda. Silakan ubah filter status atau urutan Anda.
+                                    </p>
+                                    <button
+                                        onClick={() => router.get(route('products.index'))}
+                                        className="px-5 py-2.5 bg-amber-900 hover:bg-amber-800 text-stone-100 font-bold rounded-xl shadow-md transition text-xs"
+                                    >
+                                        Lihat Semua Produk
+                                    </button>
+                                </div>
+                            </ScrollReveal>
                         )}
                     </div>
 

@@ -113,7 +113,7 @@ class ProductResource extends Resource
                             ->addable(false)
                             ->deletable(true)
                             ->reorderableWithDragAndDrop(true)
-                            ->itemLabel(fn (array $state): string => $state['url'] ? '🖼️ Gambar' : 'Gambar')
+                            ->itemLabel(fn (array $state): string => 'Gambar')
                             ->columnSpanFull()
                             ->schema([
                                 Forms\Components\Hidden::make('url'),
@@ -147,12 +147,12 @@ class ProductResource extends Resource
                                         );
                                     }),
                                 Forms\Components\Toggle::make('is_primary')
-                                    ->label('⭐ Jadikan Gambar Utama / Cover')
+                                    ->label('Jadikan Gambar Utama / Cover')
                                     ->helperText('Sistem otomatis memastikan hanya 1 gambar utama yang aktif.')
                                     ->columnSpanFull(),
                             ]),
                         FileUpload::make('new_images')
-                            ->label('➕ Tambah / Unggah Gambar Baru')
+                            ->label('Tambah / Unggah Gambar Baru')
                             ->helperText('Gambar disimpan sebagai format asli ke storage/public. Tambahkan dulu gambar baru lalu klik Save Changes.')
                             ->multiple()
                             ->reorderable()

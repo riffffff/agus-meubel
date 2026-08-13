@@ -99,7 +99,7 @@ class ReviewResource extends Resource
                     ->label('Rating')
                     ->badge()
                     ->sortable()
-                    ->formatStateUsing(fn (int $state): string => str_repeat('★ ', $state))
+                    ->formatStateUsing(fn (int $state): string => "{$state} Bintang")
                     ->color(fn (int $state): string => match (true) {
                         $state >= 4 => 'success',
                         $state === 3 => 'warning',
