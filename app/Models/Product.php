@@ -80,7 +80,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ProductImage>
+     * @return HasMany<ProductImage>
      */
     public function images(): HasMany
     {
@@ -96,7 +96,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
+     * @return HasMany<Review>
      */
     public function reviews(): HasMany
     {
@@ -104,7 +104,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Review>
+     * @return HasMany<Review>
      */
     public function allReviews(): HasMany
     {

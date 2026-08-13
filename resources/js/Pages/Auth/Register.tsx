@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import AuthModal from '@/Components/Public/AuthModal';
 
-export default function Login() {
+export default function Register() {
     const [isOpen, setIsOpen] = useState(true);
 
     const handleClose = () => {
@@ -15,11 +15,11 @@ export default function Login() {
 
     return (
         <PublicLayout>
-            <Head title="Masuk ke Akun" />
+            <Head title="Daftar Akun Baru" />
             <AuthModal
                 isOpen={isOpen}
                 onClose={handleClose}
-                initialMode="login"
+                initialMode="register"
             />
         </PublicLayout>
     );

@@ -86,6 +86,7 @@ class Article extends Model
                 ->get();
 
             foreach ($oldHeroes as $old) {
+                /** @var Article $old */
                 $old->is_hero = false;
                 $old->timestamps = false;
                 $old->saveQuietly();

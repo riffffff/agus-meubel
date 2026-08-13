@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\ProductImage;
 use App\Observers\ProductImageObserver;
 use Illuminate\Config\Repository;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -24,14 +23,6 @@ class AppServiceProvider extends ServiceProvider
         $config = $this->app->make(Repository::class);
         $currentBase = rtrim(URL::to('/'), '/');
         $config->set('filesystems.disks.public.url', $currentBase . '/storage');
-
-        Storage::disk('public')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
-            return URL::temporarySignedRoute(
-                'storage.local.temp',
-                $expiration,
-                array_merge($options, ['path' => $path])
-            );
-        });
 
         ProductImage::observe(ProductImageObserver::class);
     }

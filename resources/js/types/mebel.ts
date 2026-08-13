@@ -1,5 +1,28 @@
 export type StockStatus = 'available' | 'preorder' | 'out_of_stock';
 
+export interface CartItemSummary {
+    id: number;
+    cart_id: number;
+    product_id: number;
+    quantity: number;
+    unit_price: number;
+    subtotal_price: number;
+    product: {
+        id: number;
+        name: string;
+        slug: string | null;
+        stock_status: StockStatus;
+        image_url: string | null;
+    };
+}
+
+export interface CartSummary {
+    id: number;
+    total_quantity: number;
+    total_price: number;
+    items: CartItemSummary[];
+}
+
 export interface Product {
   id: number;
   name: string;
