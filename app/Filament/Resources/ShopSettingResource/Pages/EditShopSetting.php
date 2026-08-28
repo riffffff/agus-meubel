@@ -6,6 +6,7 @@ use App\Filament\Resources\ShopSettingResource;
 use App\Models\ShopSetting;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Cache;
 
 class EditShopSetting extends EditRecord
 {
@@ -24,5 +25,11 @@ class EditShopSetting extends EditRecord
     protected function getRedirectUrl(): string
     {
         return ShopSettingResource::getUrl('edit', ['record' => $this->record]);
+    }
+
+    protected function afterSave(): void
+    {
+        // Bersihkan cache setelah admin menyimpan perubahan
+        Cache::forget(ShopSetting::CACHE_KEY);
     }
 }

@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
         return Inertia::render('Auth/Register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
@@ -38,6 +38,7 @@ class RegisteredUserController extends Controller
             'name' => $name,
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_admin' => false,
         ]);
 
         event(new Registered($user));
@@ -46,6 +47,10 @@ class RegisteredUserController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if ($user->is_admin) {
+            return Inertia::location(url('/admin'));
+        }
+
+        return redirect()->intended('/');
     }
 }

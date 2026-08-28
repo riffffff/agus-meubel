@@ -26,6 +26,9 @@ class ArticleController extends Controller
             ->published()
             ->firstOrFail();
 
+        // Track view count
+        $article->incrementView();
+
         $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Articles/Show', [

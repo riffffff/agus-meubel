@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -24,13 +25,29 @@ class Article extends Model
         'is_hero',
         'is_published',
         'published_at',
+        'views_count',
     ];
 
     protected $casts = [
         'is_hero' => 'boolean',
         'is_published' => 'boolean',
         'published_at' => 'datetime',
+        'views_count' => 'integer',
     ];
+
+    /**
+     * Increment view counter secara atomic tanpa menyentuh timestamps.
+     * Menggunakan DB::table() langsung untuk menghindari race condition.
+     */
+    public function incrementView(): void
+    {
+        DB::table($this->getTable())
+            ->where('id', $this->id)
+            ->increment('views_count');
+
+        // Sync nilai di memory agar konsisten jika model dipakai lagi
+        $this->views_count = ($this->views_count ?? 0) + 1;
+    }
 
     public const MAX_HERO_ARTICLES = 3;
 

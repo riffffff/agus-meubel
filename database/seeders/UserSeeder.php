@@ -1,4 +1,4 @@
-<?php
+pr<?php
 
 namespace Database\Seeders;
 
@@ -15,10 +15,15 @@ class UserSeeder extends Seeder
     {
         if (User::where('email', 'admin@agusmebel.com')->doesntExist()) {
             User::create([
-                'name' => 'Admin Agus Mebel',
-                'email' => 'admin@agusmebel.com',
+                'name'     => 'Admin Agus Mebel',
+                'email'    => 'admin@agusmebel.com',
                 'password' => Hash::make('password123'),
+                'is_admin' => true,
             ]);
+        } else {
+            // Pastikan user admin yang sudah ada punya flag is_admin = true
+            User::where('email', 'admin@agusmebel.com')
+                ->update(['is_admin' => true]);
         }
     }
 }

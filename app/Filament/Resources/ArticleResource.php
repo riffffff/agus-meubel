@@ -28,7 +28,7 @@ class ArticleResource extends Resource
 
     protected static ?string $slug = 'articles';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -117,6 +117,7 @@ class ArticleResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Cover')
+                    ->disk('public')
                     ->square()
                     ->size(72)
                     ->checkFileExistence(false)

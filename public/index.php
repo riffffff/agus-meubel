@@ -10,10 +10,32 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
-// Register the Composer autoloader...
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+| Shared hosting: file Laravel ada di luar public_html
+| Path: /home/username/agusmeubel/
+| public_html/ berisi isi dari folder public/ Laravel
+|
+| Sesuaikan path __DIR__.'/../vendor' dengan lokasi install kamu.
+| Contoh jika struktur hosting:
+|   /home/username/agusmeubel/       <- root Laravel
+|   /home/username/public_html/      <- isi folder public/
+|
+| Maka path di bawah sudah benar karena index.php ada di public_html
+| dan Laravel root ada satu level di atas (/../agusmeubel)
+|
+*/
+
 require __DIR__.'/../vendor/autoload.php';
 
-// Bootstrap Laravel and handle the request...
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+*/
+
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 

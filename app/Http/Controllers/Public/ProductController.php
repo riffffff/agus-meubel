@@ -49,6 +49,9 @@ class ProductController extends Controller
             ->where('is_published', true)
             ->firstOrFail();
 
+        // Track view count
+        $product->incrementView();
+
         $shopSettings = ShopSetting::getSettings();
 
         return Inertia::render('Products/Show', [

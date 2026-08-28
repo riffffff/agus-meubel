@@ -19,7 +19,7 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cube';
 
     protected static ?string $navigationLabel = 'Produk';
 
@@ -29,7 +29,7 @@ class ProductResource extends Resource
 
     protected static ?string $slug = 'products';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -284,11 +284,10 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('images.url')
+                Tables\Columns\ImageColumn::make('primaryImage.url')
                     ->label('Cover')
                     ->square()
                     ->size(72)
-                    ->limit(1)
                     ->checkFileExistence(false)
                     ->defaultImageUrl(url('https://placehold.co/400x400/fafaf9/78716c?text=No+Image')),
                 Tables\Columns\TextColumn::make('name')

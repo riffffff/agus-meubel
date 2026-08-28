@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -32,6 +33,7 @@ class Product extends Model
         'assembly_required',
         'warranty_months',
         'is_published',
+        'views_count',
     ];
 
     protected $casts = [
@@ -43,7 +45,22 @@ class Product extends Model
         'weight_kg' => 'decimal:2',
         'assembly_required' => 'boolean',
         'is_published' => 'boolean',
+        'views_count' => 'integer',
     ];
+
+    /**
+     * Increment view counter secara atomic tanpa menyentuh timestamps.
+     * Menggunakan DB::table() langsung untuk menghindari race condition.
+     */
+    public function incrementView(): void
+    {
+        DB::table($this->getTable())
+            ->where('id', $this->id)
+            ->increment('views_count');
+
+        // Sync nilai di memory agar konsisten jika model dipakai lagi
+        $this->views_count = ($this->views_count ?? 0) + 1;
+    }
 
     protected static function booted()
     {

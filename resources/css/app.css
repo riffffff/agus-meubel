@@ -1,1 +1,86 @@
 @import "tailwindcss";
+
+@theme {
+    /* Palet warna Mahogany */
+    --color-mahogany-50:  #fdf5f0;
+    --color-mahogany-100: #fae6d9;
+    --color-mahogany-200: #f4cab0;
+    --color-mahogany-300: #eba87f;
+    --color-mahogany-400: #e0824d;
+    --color-mahogany-500: #d4622a;
+    --color-mahogany-600: #b8491f;
+    --color-mahogany-700: #97361b;
+    --color-mahogany-800: #7c2d1d;  /* warna utama mahogany */
+    --color-mahogany-900: #5e1f13;  /* mahogany gelap */
+    --color-mahogany-950: #3a1009;
+}
+
+/* ── Tekstur Serat Kayu ─────────────────────────────────────── */
+.wood-texture {
+    position: relative;
+    isolation: isolate;
+}
+
+.wood-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    /* Lapis 1: serat kayu halus — garis-garis horizontal tipis dengan jarak tak teratur */
+    background-image:
+        repeating-linear-gradient(
+            180deg,
+            transparent 0px,
+            transparent 3px,
+            rgba(255, 220, 160, 0.07) 3px,
+            rgba(255, 220, 160, 0.07) 4px,
+            transparent 4px,
+            transparent 9px,
+            rgba(200, 140, 80, 0.06) 9px,
+            rgba(200, 140, 80, 0.06) 10px,
+            transparent 10px,
+            transparent 15px,
+            rgba(255, 200, 120, 0.09) 15px,
+            rgba(255, 200, 120, 0.09) 16px,
+            transparent 16px,
+            transparent 22px,
+            rgba(180, 100, 50, 0.05) 22px,
+            rgba(180, 100, 50, 0.05) 23px
+        ),
+        /* Lapis 2: variasi gelap-terang antar serat (pola setiap ~30px) */
+        repeating-linear-gradient(
+            178deg,
+            rgba(0, 0, 0, 0.0) 0px,
+            rgba(0, 0, 0, 0.08) 8px,
+            rgba(255, 180, 80, 0.06) 14px,
+            rgba(0, 0, 0, 0.0) 22px,
+            rgba(0, 0, 0, 0.05) 28px,
+            rgba(0, 0, 0, 0.0) 35px
+        ),
+        /* Lapis 3: highlight serat terang diagonal tipis */
+        repeating-linear-gradient(
+            175deg,
+            transparent 0px,
+            transparent 18px,
+            rgba(255, 230, 180, 0.05) 18px,
+            rgba(255, 230, 180, 0.05) 19px,
+            transparent 19px,
+            transparent 42px,
+            rgba(255, 210, 140, 0.07) 42px,
+            rgba(255, 210, 140, 0.07) 43px
+        );
+
+    background-size: 100% 23px, 100% 35px, 100% 43px;
+}
+
+.wood-texture > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Footer lebih gelap — tekstur lebih samar */
+.wood-texture-subtle::before {
+    opacity: 0.6;
+}

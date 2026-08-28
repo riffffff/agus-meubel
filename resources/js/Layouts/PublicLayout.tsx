@@ -8,7 +8,6 @@ import {
     MessageCircle,
     Menu,
     Phone,
-    Sofa,
     X,
     UserPlus,
     LogOut,
@@ -47,104 +46,91 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans selection:bg-amber-900 selection:text-white">
-            {/* Header / Navbar */}
-            <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
+        <div className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans selection:bg-mahogany-800 selection:text-white">
+
+            {/* ── HEADER ─────────────────────────────────────────────────── */}
+            <header className="sticky top-0 z-40 bg-mahogany-900 shadow-lg wood-texture">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-20 items-center">
-                        {/* Logo & Shop Name */}
+
+                        {/* Logo & Nama Toko */}
                         <div className="shrink-0 flex items-center">
-                            <Link href={route('home')} className="flex items-center gap-2.5 group">
-                                <div className="p-2 rounded-xl bg-amber-900 text-amber-50 shadow-xs group-hover:bg-amber-800 transition">
-                                    <Sofa className="h-5 w-5" />
+                            <Link href={route('home')} className="flex items-center gap-3 group">
+                                <div className="h-11 w-11 rounded-xl overflow-hidden bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0 transition group-hover:ring-white/40">
+                                    <img
+                                        src={window.asset('storage/logo/logo.jpeg')}
+                                        alt={shopName}
+                                        className="h-full w-full object-cover"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                        }}
+                                    />
                                 </div>
-                                <span className="text-xl sm:text-2xl font-bold bg-linear-to-r from-amber-900 to-amber-950 bg-clip-text text-transparent">
+                                <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                                     {shopName}
                                 </span>
                             </Link>
                         </div>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-8">
-                            <Link
-                                href={route('home')}
-                                className={`text-sm font-semibold transition duration-200 ${
-                                    route().current('home')
-                                        ? 'text-amber-900 border-b-2 border-amber-900 py-1'
-                                        : 'text-stone-600 hover:text-amber-900 py-1'
-                                }`}
-                            >
-                                Beranda
-                            </Link>
-                            <Link
-                                href={route('products.index')}
-                                className={`text-sm font-semibold transition duration-200 ${
-                                    route().current('products.*')
-                                        ? 'text-amber-900 border-b-2 border-amber-900 py-1'
-                                        : 'text-stone-600 hover:text-amber-900 py-1'
-                                }`}
-                            >
-                                Katalog Produk
-                            </Link>
-                            <Link
-                                href={route('articles.index')}
-                                className={`text-sm font-semibold transition duration-200 ${
-                                    route().current('articles.*')
-                                        ? 'text-amber-900 border-b-2 border-amber-900 py-1'
-                                        : 'text-stone-600 hover:text-amber-900 py-1'
-                                }`}
-                            >
-                                Artikel & Info
-                            </Link>
+                        <nav className="hidden md:flex items-center space-x-1">
+                            {[
+                                { href: route('home'), label: 'Beranda', active: route().current('home') },
+                                { href: route('products.index'), label: 'Katalog Produk', active: route().current('products.*') },
+                                { href: route('articles.index'), label: 'Artikel & Info', active: route().current('articles.*') },
+                            ].map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-200 ${
+                                        item.active
+                                            ? 'bg-white/15 text-white'
+                                            : 'text-mahogany-200 hover:bg-white/10 hover:text-white'
+                                    }`}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
                         </nav>
 
-                        {/* Desktop Right Actions: Cart + Auth */}
-                        <div className="hidden md:flex items-center gap-3">
+                        {/* Desktop Right: Cart + Auth */}
+                        <div className="hidden md:flex items-center gap-2">
                             {user ? (
                                 <>
                                     <Link
                                         href={route('cart.index')}
-                                        className="relative inline-flex items-center justify-center p-2.5 rounded-xl text-stone-600 hover:text-amber-900 hover:bg-amber-50 transition focus:outline-none"
+                                        className="inline-flex items-center justify-center p-2.5 rounded-lg text-mahogany-200 hover:text-white hover:bg-white/10 transition"
                                         aria-label="Keranjang Belanja"
                                     >
                                         <ShoppingCart className="h-5 w-5" />
                                     </Link>
-                                    <div className="text-xs text-stone-500 max-w-36 truncate">
-                                        Hai, <span className="font-semibold text-stone-800">{user.name}</span>
-                                    </div>
-                                    <form
-                                        method="POST"
-                                        action={route('logout')}
-                                        onSubmit={(e) => {
-                                            e.preventDefault();
-                                            (window as any).Inertia?.post(route('logout'), {
-                                                onFinish: () => window.location.reload(),
-                                            });
-                                        }}
+                                    <span className="text-xs text-mahogany-300 max-w-32 truncate">
+                                        Hai, <span className="font-semibold text-white">{user.name}</span>
+                                    </span>
+                                    <Link
+                                        href={route('logout')}
+                                        method="post"
+                                        as="button"
+                                        className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg text-mahogany-200 hover:text-white hover:bg-white/10 transition font-semibold"
                                     >
-                                        <button
-                                            type="submit"
-                                            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-xl text-stone-600 hover:text-rose-700 hover:bg-rose-50 transition font-semibold"
-                                        >
-                                            <LogOut className="h-4 w-4" />
-                                            <span>Keluar</span>
-                                        </button>
-                                    </form>
+                                        <LogOut className="h-4 w-4" />
+                                        <span>Keluar</span>
+                                    </Link>
                                 </>
                             ) : (
                                 <>
                                     <button
                                         type="button"
                                         onClick={() => openAuthModal('login')}
-                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm rounded-xl text-stone-700 hover:text-amber-900 hover:bg-stone-100 transition font-semibold"
+                                        className="inline-flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg text-mahogany-100 hover:text-white hover:bg-white/10 transition font-semibold"
                                     >
-                                        <LogIn className="h-4 w-4 text-stone-500" />
+                                        <LogIn className="h-4 w-4" />
                                         <span>Masuk</span>
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => openAuthModal('register')}
-                                        className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm rounded-xl bg-amber-900 text-white hover:bg-amber-800 font-bold shadow-xs transition"
+                                        className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm rounded-lg bg-white text-mahogany-900 hover:bg-mahogany-50 font-bold shadow-sm transition"
                                     >
                                         <UserPlus className="h-4 w-4" />
                                         <span>Daftar</span>
@@ -153,12 +139,12 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             )}
                         </div>
 
-                        {/* Mobile Menu Button */}
+                        {/* Mobile: Cart + Hamburger */}
                         <div className="flex md:hidden items-center gap-2">
                             {user && (
                                 <Link
                                     href={route('cart.index')}
-                                    className="inline-flex items-center justify-center p-2 rounded-xl text-stone-600 hover:bg-amber-50 hover:text-amber-900 transition"
+                                    className="inline-flex items-center justify-center p-2 rounded-lg text-mahogany-200 hover:text-white hover:bg-white/10 transition"
                                     aria-label="Keranjang Belanja"
                                 >
                                     <ShoppingCart className="h-5 w-5" />
@@ -166,7 +152,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             )}
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="inline-flex items-center justify-center p-2 rounded-xl text-stone-500 hover:text-stone-900 hover:bg-stone-100 focus:outline-none transition"
+                                className="inline-flex items-center justify-center p-2 rounded-lg text-mahogany-200 hover:text-white hover:bg-white/10 transition"
                                 aria-label="Toggle menu"
                             >
                                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -177,108 +163,80 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="md:hidden bg-white border-b border-stone-200">
+                    <div className="md:hidden bg-mahogany-950 border-t border-mahogany-800 wood-texture wood-texture-subtle">
                         <div className="px-3 pt-2 pb-4 space-y-1">
-                            <Link
-                                href={route('home')}
-                                className={`block px-3 py-2 rounded-xl text-base font-semibold ${
-                                    route().current('home')
-                                        ? 'bg-amber-50 text-amber-900'
-                                        : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
-                                }`}
-                            >
-                                Beranda
-                            </Link>
-                            <Link
-                                href={route('products.index')}
-                                className={`block px-3 py-2 rounded-xl text-base font-semibold ${
-                                    route().current('products.*')
-                                        ? 'bg-amber-50 text-amber-900'
-                                        : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
-                                }`}
-                            >
-                                Katalog Produk
-                            </Link>
-                            <Link
-                                href={route('articles.index')}
-                                className={`block px-3 py-2 rounded-xl text-base font-semibold ${
-                                    route().current('articles.*')
-                                        ? 'bg-amber-50 text-amber-900'
-                                        : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
-                                }`}
-                            >
-                                Artikel & Info
-                            </Link>
+                            {[
+                                { href: route('home'), label: 'Beranda', active: route().current('home') },
+                                { href: route('products.index'), label: 'Katalog Produk', active: route().current('products.*') },
+                                { href: route('articles.index'), label: 'Artikel & Info', active: route().current('articles.*') },
+                            ].map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    className={`block px-3 py-2.5 rounded-lg text-base font-semibold transition ${
+                                        item.active
+                                            ? 'bg-mahogany-800 text-white'
+                                            : 'text-mahogany-200 hover:bg-mahogany-800 hover:text-white'
+                                    }`}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+
+                            <div className="h-px bg-mahogany-800 my-2" />
 
                             {user ? (
                                 <>
                                     <Link
                                         href={route('cart.index')}
-                                        className="block mt-2 px-3 py-2 rounded-xl text-base font-semibold text-stone-600 hover:bg-amber-50 hover:text-amber-900"
+                                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-base font-semibold text-mahogany-200 hover:bg-mahogany-800 hover:text-white transition"
                                     >
-                                        <span className="inline-flex items-center gap-2">
-                                            <ShoppingCart className="h-4 w-4" />
-                                            Keranjang Saya
-                                        </span>
+                                        <ShoppingCart className="h-4 w-4" />
+                                        Keranjang Saya
                                     </Link>
-                                    <div className="px-3 pt-2 text-xs text-stone-500">
-                                        Hai, <span className="font-semibold text-stone-700">{user.name}</span>
+                                    <div className="px-3 py-1 text-xs text-mahogany-400">
+                                        Hai, <span className="font-semibold text-mahogany-200">{user.name}</span>
                                     </div>
-                                    <div className="px-3 pt-1">
-                                        <form
-                                            method="POST"
-                                            action={route('logout')}
-                                            onSubmit={(e) => {
-                                                e.preventDefault();
-                                                (window as any).Inertia?.post(route('logout'), {
-                                                    onFinish: () => window.location.reload(),
-                                                });
-                                            }}
-                                        >
-                                            <button
-                                                type="submit"
-                                                className="w-full inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold text-rose-700 hover:bg-rose-50 transition"
-                                            >
-                                                <LogOut className="h-4 w-4" />
-                                                Keluar
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <Link
+                                        href={route('logout')}
+                                        method="post"
+                                        as="button"
+                                        className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-bold text-rose-400 hover:bg-rose-950/40 transition"
+                                    >
+                                        <LogOut className="h-4 w-4" />
+                                        Keluar
+                                    </Link>
                                 </>
                             ) : (
-                                <div className="px-3 pt-3 space-y-2">
+                                <div className="space-y-2 pt-1">
                                     <button
                                         type="button"
                                         onClick={() => openAuthModal('login')}
-                                        className="block w-full text-center px-4 py-2.5 rounded-xl text-sm font-semibold border border-stone-300 text-stone-700 hover:bg-stone-50"
+                                        className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-semibold border border-mahogany-700 text-mahogany-200 hover:bg-mahogany-800 hover:text-white transition"
                                     >
-                                        <span className="inline-flex items-center justify-center gap-1.5">
-                                            <LogIn className="h-4 w-4" />
-                                            Masuk
-                                        </span>
+                                        <LogIn className="h-4 w-4" />
+                                        Masuk
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => openAuthModal('register')}
-                                        className="block w-full text-center px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-amber-900 hover:bg-amber-800 shadow-xs"
+                                        className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg text-sm font-bold bg-white text-mahogany-900 hover:bg-mahogany-50 transition"
                                     >
-                                        <span className="inline-flex items-center justify-center gap-1.5">
-                                            <UserPlus className="h-4 w-4" />
-                                            Daftar Akun Baru
-                                        </span>
+                                        <UserPlus className="h-4 w-4" />
+                                        Daftar Akun Baru
                                     </button>
                                 </div>
                             )}
 
-                            <div className="px-3 pt-3">
+                            <div className="pt-2">
                                 <a
                                     href={`https://wa.me/${waNumber}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-full flex items-center justify-center px-4 py-2.5 rounded-xl text-white font-bold text-center shadow-xs"
+                                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-white font-bold shadow-sm"
                                     style={{ backgroundColor: '#075E54' }}
                                 >
-                                    <MessageCircle className="mr-2 h-4 w-4" />
+                                    <MessageCircle className="h-4 w-4" />
                                     Hubungi Kami via WhatsApp
                                 </a>
                             </div>
@@ -287,91 +245,127 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 )}
             </header>
 
-            {/* Main Content */}
+            {/* ── MAIN CONTENT ───────────────────────────────────────────── */}
             <main className="grow">{children}</main>
 
-            {/* Footer */}
-            <footer className="bg-stone-950 text-stone-400 border-t border-stone-900">
+            {/* ── FOOTER ─────────────────────────────────────────────────── */}
+            <footer className="bg-mahogany-950 text-mahogany-300 border-t border-mahogany-900 wood-texture wood-texture-subtle">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-                        {/* Column 1: Info Toko (Dynamic from shopSettings) */}
-                        <div className="md:col-span-2 space-y-6">
-                            <span className="text-2xl font-bold bg-linear-to-r from-amber-100 to-amber-300 bg-clip-text text-transparent">
-                                {shopName}
-                            </span>
-                            <p className="text-stone-400 text-sm leading-relaxed max-w-md">
+
+                        {/* Info Toko */}
+                        <div className="md:col-span-2 space-y-5">
+                            <div className="flex items-center gap-3">
+                                <div className="h-12 w-12 rounded-xl overflow-hidden bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0">
+                                    <img
+                                        src={window.asset('storage/logo/logo.jpeg')}
+                                        alt={shopName}
+                                        className="h-full w-full object-cover"
+                                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                    />
+                                </div>
+                                <span className="text-2xl font-bold text-white">
+                                    {shopName}
+                                </span>
+                            </div>
+                            <p className="text-mahogany-400 text-sm leading-relaxed max-w-md">
                                 Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.
                             </p>
-                            <div className="flex gap-4">
-                                <a
-                                    href={`https://wa.me/${waNumber}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-xl bg-stone-900 hover:bg-emerald-900/40 text-stone-300 hover:text-emerald-400 flex items-center justify-center transition duration-300"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                </a>
-                            </div>
+                            <a
+                                href={`https://wa.me/${waNumber}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 w-10 h-10 rounded-xl bg-mahogany-900 hover:bg-emerald-900/50 text-mahogany-300 hover:text-emerald-400 justify-center transition duration-300"
+                            >
+                                <MessageCircle className="w-5 h-5" />
+                            </a>
                         </div>
 
-                        {/* Column 2: Link Navigasi */}
+                        {/* Navigasi */}
                         <div className="space-y-4">
-                            <h3 className="text-stone-200 font-bold text-sm uppercase tracking-wider">Halaman</h3>
+                            <h3 className="text-white font-bold text-sm uppercase tracking-wider">Halaman</h3>
                             <ul className="space-y-2.5 text-sm">
-                                <li>
-                                    <Link href={route('home')} className="hover:text-amber-400 transition duration-200">
-                                        Beranda
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href={route('products.index')} className="hover:text-amber-400 transition duration-200">
-                                        Katalog Produk
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href={route('articles.index')} className="hover:text-amber-400 transition duration-200">
-                                        Artikel & Info
-                                    </Link>
-                                </li>
+                                {[
+                                    { href: route('home'), label: 'Beranda' },
+                                    { href: route('products.index'), label: 'Katalog Produk' },
+                                    { href: route('articles.index'), label: 'Artikel & Info' },
+                                ].map((item) => (
+                                    <li key={item.label}>
+                                        <Link
+                                            href={item.href}
+                                            className="hover:text-mahogany-100 transition duration-200"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
-                        {/* Column 3: Jam Kerja / Kontak (Dynamic from shopSettings) */}
+                        {/* Kontak */}
                         <div className="space-y-4">
-                            <h3 className="text-stone-200 font-bold text-sm uppercase tracking-wider">Kontak Toko</h3>
-                            <ul className="space-y-2.5 text-sm">
-                                <li className="flex gap-2 items-start">
-                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                            <h3 className="text-white font-bold text-sm uppercase tracking-wider">Kontak Toko</h3>
+                            <ul className="space-y-3 text-sm">
+                                <li className="flex gap-2.5 items-start">
+                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-mahogany-500" />
                                     <span>{address}</span>
                                 </li>
-                                <li className="flex gap-2 items-start">
-                                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                                <li className="flex gap-2.5 items-start">
+                                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-mahogany-500" />
                                     <span>{formatWaDisplay(waNumber)}</span>
                                 </li>
-                                <li className="flex gap-2 items-start">
-                                    <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                                <li className="flex gap-2.5 items-start">
+                                    <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-mahogany-500" />
                                     <span>{operatingHours}</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    {/* Bottom Footer */}
-                    <div className="mt-16 pt-8 border-t border-stone-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+                    {/* Bottom bar */}
+                    <div className="mt-14 pt-8 border-t border-mahogany-900 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-mahogany-500">
                         <p>&copy; {new Date().getFullYear()} {shopName}. All rights reserved.</p>
-                        <p className="flex items-center gap-1">
-                            High Quality Teak Furniture
-                        </p>
+                        <p>High Quality Teak Furniture — Jepara</p>
                     </div>
                 </div>
             </footer>
 
-            {/* Global Auth Modal */}
+            {/* Auth Modal */}
             <AuthModal
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 initialMode={authModalMode}
             />
+
+            {/* Floating WhatsApp */}
+            <style>{`
+                @keyframes kembangKempis {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.04); }
+                }
+                .animate-kembang-kempis {
+                    animation: kembangKempis 3s ease-in-out infinite;
+                }
+            `}</style>
+            <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent('Halo, saya ingin konsultasi mengenai produk mebel.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-10 sm:bottom-12 right-6 sm:right-8 z-50 flex items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl border border-stone-200/80 shadow-xl transition-all duration-300 group animate-kembang-kempis hover:animate-none hover:scale-105"
+                aria-label="Konsultasi WhatsApp"
+            >
+                <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-[#25D366] text-white shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
+                    <MessageCircle className="w-5 h-5 fill-white/20" />
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[#128C7E]"></span>
+                    </span>
+                </div>
+                <div className="flex flex-col text-left">
+                    <span className="text-xs font-extrabold text-stone-900 leading-tight">Ingin konsultasi?</span>
+                    <span className="text-[11px] font-semibold text-emerald-700 leading-tight">Hubungi kami di WhatsApp</span>
+                </div>
+            </a>
         </div>
     );
 }

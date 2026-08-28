@@ -26,20 +26,20 @@ class Review extends Model
     ];
 
     protected $casts = [
-        'rating' => 'integer',
-        'is_approved' => 'boolean',
-        'product_id' => 'integer',
+        'rating'     => 'integer',
+        'is_approved'=> 'boolean',
+        'product_id' => 'integer', // NOT NULL — review wajib terhubung ke produk
     ];
 
     public static function validationRules(array $overrides = []): array
     {
         return array_merge([
             'product_id' => ['required', 'integer', 'exists:products,id'],
-            'name' => ['required', 'string', 'min:2', 'max:100'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'review' => ['required', 'string', 'min:10', 'max:2000'],
-            'is_approved' => ['boolean'],
+            'name'       => ['required', 'string', 'min:2', 'max:100'],
+            'city'       => ['nullable', 'string', 'max:100'],
+            'rating'     => ['required', 'integer', 'min:1', 'max:5'],
+            'review'     => ['required', 'string', 'min:10', 'max:2000'],
+            'is_approved'=> ['boolean'],
         ], $overrides);
     }
 
@@ -63,6 +63,12 @@ class Review extends Model
             $nameStr = is_string($review->name) ? $review->name : '';
             if (trim($nameStr) === '') {
                 $review->name = 'Pelanggan';
+            }
+
+            // Review dari publik selalu butuh persetujuan admin
+            // (review yang dibuat langsung dari Filament tetap bisa di-override oleh form)
+            if (! isset($review->is_approved)) {
+                $review->is_approved = false;
             }
         });
 

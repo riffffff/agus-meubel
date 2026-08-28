@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,6 +18,10 @@ class CartController extends Controller
     {
         $user = $request->user();
         $cart = $user->ensureCart();
+
+        // Refresh harga dari produk terkini sebelum ditampilkan
+        $cart->recalculateTotals();
+
         $cart->loadMissing(['items.product', 'items.product.images']);
 
         $itemsFormatted = $cart->items->map(function (CartItem $item) {
@@ -86,25 +91,31 @@ class CartController extends Controller
         $user = $request->user();
         $cart = $user->ensureCart();
 
-        $existing = CartItem::query()
-            ->where('cart_id', $cart->id)
-            ->where('product_id', $product->id)
-            ->first();
+        DB::transaction(function () use ($cart, $product, $qty) {
+            // Lock the cart row to prevent concurrent inserts of the same product
+            $lockedCart = \App\Models\Cart::lockForUpdate()->find($cart->id);
 
-        if ($existing) {
-            $existing->quantity = $existing->quantity + $qty;
-            $existing->save();
-        } else {
-            CartItem::create([
-                'cart_id' => $cart->id,
-                'product_id' => $product->id,
-                'quantity' => $qty,
-                'unit_price' => (int) $product->price,
-                'subtotal_price' => (int) $product->price * $qty,
-            ]);
-        }
+            $existing = CartItem::query()
+                ->where('cart_id', $lockedCart->id)
+                ->where('product_id', $product->id)
+                ->lockForUpdate()
+                ->first();
 
-        $cart->recalculateTotals();
+            if ($existing) {
+                $existing->quantity = $existing->quantity + $qty;
+                $existing->save();
+            } else {
+                CartItem::create([
+                    'cart_id' => $lockedCart->id,
+                    'product_id' => $product->id,
+                    'quantity' => $qty,
+                    'unit_price' => (int) $product->price,
+                    'subtotal_price' => (int) $product->price * $qty,
+                ]);
+            }
+
+            $lockedCart->recalculateTotals();
+        });
 
         return redirect()
             ->route('cart.index')
@@ -126,8 +137,11 @@ class CartController extends Controller
             'quantity' => 'required|int|min:1|max:100',
         ]);
 
-        $cartItem->quantity = (int) $validated['quantity'];
-        $cartItem->save();
+        DB::transaction(function () use ($cartItem, $validated) {
+            CartItem::lockForUpdate()->find($cartItem->id);
+            $cartItem->quantity = (int) $validated['quantity'];
+            $cartItem->save();
+        });
 
         return redirect()->route('cart.index');
     }

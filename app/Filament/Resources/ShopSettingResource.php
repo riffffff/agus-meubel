@@ -27,7 +27,7 @@ class ShopSettingResource extends Resource
 
     protected static ?string $slug = 'shop-settings';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -46,6 +46,40 @@ class ShopSettingResource extends Resource
                             ->maxLength(1000)
                             ->placeholder('Contoh: Jepara, Jawa Tengah, Indonesia'),
                     ])->columns(1),
+
+                Forms\Components\Section::make('Logo & Branding')
+                    ->description('Upload logo kustom atau biarkan kosong untuk menggunakan logo default di public/storage/logo/')
+                    ->schema([
+                        Forms\Components\FileUpload::make('logo')
+                            ->label('Logo (Light Mode)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios(['16:9', '4:3', '1:1'])
+                            ->maxSize(2048)
+                            ->helperText('Kosongkan untuk menggunakan logo default: public/storage/logo/logo.jpeg'),
+                        
+                        Forms\Components\FileUpload::make('logo_dark')
+                            ->label('Logo (Dark Mode)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios(['16:9', '4:3', '1:1'])
+                            ->maxSize(2048)
+                            ->helperText('Opsional. Jika kosong, akan pakai logo light mode.'),
+
+                        Forms\Components\FileUpload::make('favicon')
+                            ->label('Favicon')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios(['1:1'])
+                            ->maxSize(512)
+                            ->helperText('Icon untuk browser tab. Ukuran ideal: 32x32 atau 64x64 px'),
+                    ])->columns(3)->collapsible(),
 
                 Forms\Components\Section::make('Kontak WhatsApp')
                     ->schema([

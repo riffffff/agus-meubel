@@ -14,7 +14,7 @@ class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static ?string $navigationIcon = 'heroicon-o-star';
 
     protected static ?string $navigationLabel = 'Review';
 
@@ -24,7 +24,7 @@ class ReviewResource extends Resource
 
     protected static ?string $slug = 'reviews';
 
-    protected static ?int $navigationSort = 30;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

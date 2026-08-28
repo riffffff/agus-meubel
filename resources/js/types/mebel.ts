@@ -82,6 +82,9 @@ export interface Review {
 export interface ShopSetting {
   id?: number;
   shop_name?: string | null;
+  logo?: string | null;
+  logo_dark?: string | null;
+  favicon?: string | null;
   address?: string | null;
   whatsapp_number: string;
   whatsapp_template: string;
