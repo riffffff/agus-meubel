@@ -8,11 +8,17 @@
 
         <!-- Favicon -->
         @php
-            $shopSettings = \App\Models\ShopSetting::getSettings();
-            $faviconUrl = $shopSettings->getFaviconUrl();
+            try {
+                $shopSettings = \App\Models\ShopSetting::getSettings();
+                $faviconUrl   = $shopSettings->getFaviconUrl();
+            } catch (\Throwable) {
+                $faviconUrl = null;
+            }
         @endphp
+        @if ($faviconUrl)
         <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
         <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

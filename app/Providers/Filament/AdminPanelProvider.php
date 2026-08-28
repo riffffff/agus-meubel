@@ -24,17 +24,25 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $shopSettings = \App\Models\ShopSetting::getSettings();
-        
+        try {
+            $shopSettings = \App\Models\ShopSetting::getSettings();
+            $brandName    = ($shopSettings->shop_name ?? 'Agus Mebel') . ' Admin';
+            $brandLogo    = $shopSettings->getLogoUrl('light');
+            $favicon      = $shopSettings->getFaviconUrl();
+        } catch (\Throwable) {
+            $brandName = 'Agus Mebel Admin';
+            $brandLogo = null;
+            $favicon   = null;
+        }
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName(fn () => $shopSettings->shop_name . ' Admin')
-            ->brandLogo($shopSettings->getLogoUrl('light'))
-            ->brandLogoHeight('2.5rem')
-            ->favicon($shopSettings->getFaviconUrl())
+            ->brandName($brandName)
+            ->when($brandLogo, fn ($p) => $p->brandLogo($brandLogo)->brandLogoHeight('2.5rem'))
+            ->when($favicon, fn ($p) => $p->favicon($favicon))
             ->collapsibleNavigationGroups(false)
             ->colors([
                 'primary' => Color::Amber,
