@@ -53,16 +53,41 @@ return new class extends Migration
             DB::statement('PRAGMA foreign_keys = ON');
         } else {
             // MySQL / PostgreSQL: ubah kolom menjadi NOT NULL
-            Schema::table('reviews', function (Blueprint $table) {
-                // Drop foreign key lama yang nullable
-                $table->dropForeign(['product_id']);
+            // Cek apakah kolom sudah NOT NULL (fresh install MySQL tidak perlu alter)
+            $column = DB::selectOne("
+                SELECT IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                AND TABLE_NAME = 'reviews'
+                AND COLUMN_NAME = 'product_id'
+            ");
+
+            // Jika sudah NOT NULL, skip
+            if ($column && $column->IS_NULLABLE === 'NO') {
+                return;
+            }
+
+            // Drop semua FK yang mereferensikan product_id di tabel reviews
+            $fks = DB::select("
+                SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE TABLE_SCHEMA = DATABASE()
+                AND TABLE_NAME = 'reviews'
+                AND COLUMN_NAME = 'product_id'
+                AND REFERENCED_TABLE_NAME IS NOT NULL
+            ");
+
+            Schema::table('reviews', function (Blueprint $table) use ($fks) {
+                foreach ($fks as $fk) {
+                    $table->dropForeign($fk->CONSTRAINT_NAME);
+                }
             });
 
+            // Ubah kolom jadi NOT NULL dan tambah FK baru
+            DB::statement("ALTER TABLE reviews MODIFY product_id BIGINT UNSIGNED NOT NULL");
+
             Schema::table('reviews', function (Blueprint $table) {
-                $table->foreignId('product_id')
-                    ->nullable(false)
-                    ->change()
-                    ->constrained('products')
+                $table->foreign('product_id')
+                    ->references('id')
+                    ->on('products')
                     ->cascadeOnDelete();
             });
         }
