@@ -296,12 +296,27 @@ Artisan::command('generate:placeholder-images {--force : Overwrite jika file sud
 })->purpose('Generate gambar placeholder (produk, artikel, logo) via PHP GD — untuk hosting baru setelah clone GitHub');
 
 /**
- * Shortcut untuk deploy cepat: clear cache + generate placeholder + copy storage dalam 1 command.
+ * Shortcut untuk deploy cepat: clear cache + generate placeholder + copy storage + flush shop setting cache.
  */
 Artisan::command('deploy:shared-hosting', function () {
-    $this->info('Menjalankan optimasi + placeholder + storage:copy untuk shared hosting...');
+    $this->info('Menjalankan optimasi + placeholder + storage:copy + flush cache untuk shared hosting...');
     $this->call('optimize:clear');
     $this->call('generate:placeholder-images');
     $this->call('storage:copy');
+    $this->call('shop-settings:flush-cache');
     $this->info('Siap dijalankan! 🚀');
-})->purpose('Optimize + generate placeholder + storage:copy — deploy cepat untuk shared hosting tanpa Node & tanpa symlink');
+})->purpose('Optimize + generate placeholder + storage:copy + flush cache — deploy cepat untuk shared hosting tanpa Node & tanpa symlink');
+
+/**
+ * Flush cache setting toko (shop_settings) agar perubahan logo/data admin langsung terlihat di frontend.
+ */
+Artisan::command('shop-settings:flush-cache', function () {
+    if (! class_exists(\App\Models\ShopSetting::class)) {
+        $this->warn('Class ShopSetting tidak tersedia.');
+        return 1;
+    }
+    \App\Models\ShopSetting::flushCache();
+    $this->info('Cache shop_settings berhasil dihapus. Frontend akan ambil data terbaru dari DB pada request berikutnya.');
+    $this->comment('Jangan lupa Hard Refresh browser (Ctrl+Shift+R / Cmd+Shift+R) untuk membersihkan cache sisi client (Inertia/React).');
+    return 0;
+})->purpose('Hapus cache Pengaturan Toko (shop_settings) — agar perubahan admin langsung tampil di web publik');

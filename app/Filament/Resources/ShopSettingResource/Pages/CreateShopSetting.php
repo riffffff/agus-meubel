@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ShopSettingResource\Pages;
 use App\Filament\Resources\ShopSettingResource;
 use App\Models\ShopSetting;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Cache;
 
 class CreateShopSetting extends CreateRecord
 {
@@ -17,6 +18,7 @@ class CreateShopSetting extends CreateRecord
         if ($existing) {
             $existing->fill($data);
             $existing->save();
+            Cache::forget(ShopSetting::CACHE_KEY);
             return $existing;
         }
 
@@ -24,6 +26,7 @@ class CreateShopSetting extends CreateRecord
         $record->fill($data);
         $record->id = ShopSetting::SINGLETON_ID;
         $record->save();
+        Cache::forget(ShopSetting::CACHE_KEY);
 
         return $record;
     }
@@ -31,5 +34,10 @@ class CreateShopSetting extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return ShopSettingResource::getUrl('edit', ['record' => ShopSetting::SINGLETON_ID]);
+    }
+
+    protected function afterSave(): void
+    {
+        Cache::forget(ShopSetting::CACHE_KEY);
     }
 }
