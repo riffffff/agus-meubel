@@ -40,10 +40,10 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => null,
+            'root'   => env('FILESYSTEM_PUBLIC_ROOT', storage_path('app/public')),
+            'url'    => env('FILESYSTEM_PUBLIC_URL', null),
             'visibility' => 'public',
-            'throw' => false,
+            'throw'  => false,
             'report' => false,
         ],
 

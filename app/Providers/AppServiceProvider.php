@@ -25,6 +25,13 @@ class AppServiceProvider extends ServiceProvider
 
         $config = $this->app->make(Repository::class);
         $currentBase = rtrim(URL::to('/'), '/');
+
+        // Tentukan root disk berdasarkan env
+        // Di shared hosting tanpa symlink: root = public/storage (folder fisik)
+        // Di lokal dengan symlink: root = storage/app/public
+        $publicRoot = env('FILESYSTEM_PUBLIC_ROOT', storage_path('app/public'));
+
+        $config->set('filesystems.disks.public.root', $publicRoot);
         $config->set('filesystems.disks.public.url', $currentBase . '/storage');
 
         ProductImage::observe(ProductImageObserver::class);
