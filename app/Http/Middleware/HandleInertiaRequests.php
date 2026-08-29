@@ -58,6 +58,14 @@ class HandleInertiaRequests extends Middleware
                 'hero_banner_bg' => $shopSettings->hero_banner_bg,
                 'shipping_areas' => $shopSettings->shipping_areas,
                 'shipping_estimate_days' => $shopSettings->shipping_estimate_days,
+                // URL LOGO & FAVICON (sudah lewat getLogoUrl -> auto fallback ke placeholder jika null)
+                'logo_url'       => $shopSettings->getLogoUrl('light'),
+                'logo_dark_url'  => $shopSettings->getLogoUrl('dark'),
+                'favicon_url'    => $shopSettings->getFaviconUrl(),
+                // Field path asli (jika diperlukan di frontend)
+                'logo'           => $shopSettings->logo,
+                'logo_dark'      => $shopSettings->logo_dark,
+                'favicon'        => $shopSettings->favicon,
             ],
         ];
     }

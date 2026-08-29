@@ -11,6 +11,12 @@ export interface User {
 export interface ShopSettingsShared {
     id?: number;
     shop_name?: string | null;
+    logo?: string | null;
+    logo_dark?: string | null;
+    favicon?: string | null;
+    logo_url?: string;
+    logo_dark_url?: string;
+    favicon_url?: string;
     address?: string | null;
     whatsapp_number: string;
     whatsapp_template: string;

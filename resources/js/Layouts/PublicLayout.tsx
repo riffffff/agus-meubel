@@ -26,6 +26,9 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     const shopName = shopSettings?.shop_name || 'Agus Mebel Jepara';
     const address = shopSettings?.address || 'Jepara, Jawa Tengah, Indonesia';
     const operatingHours = shopSettings?.operating_hours || 'Senin - Sabtu: 08:00 - 17:00';
+    // Logo URL dari setting toko (jika admin upload logo custom, akan pakai itu; fallback ke placeholder default jika null)
+    const logoUrl = shopSettings?.logo_url || window.asset('storage/logo/logo.jpeg');
+    const logoDarkUrl = shopSettings?.logo_dark_url || logoUrl;
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -58,7 +61,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             <Link href={route('home')} className="flex items-center gap-3 group">
                                 <div className="h-11 w-11 rounded-xl overflow-hidden bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0 transition group-hover:ring-white/40">
                                     <img
-                                        src={window.asset('storage/logo/logo.jpeg')}
+                                        src={logoUrl}
                                         alt={shopName}
                                         className="h-full w-full object-cover"
                                         onError={(e) => {
