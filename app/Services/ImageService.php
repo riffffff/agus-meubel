@@ -13,7 +13,7 @@ class ImageService
     public function handleUpload(UploadedFile $file, string $dir = 'products'): array
     {
         $filename = Str::random(24) . '_' . time();
-        $storageDir = "public/{$dir}";
+        $storageDir = $dir;
 
         $paths = [
             'url'       => null,
@@ -24,7 +24,6 @@ class ImageService
             return $paths;
         }
 
-        // Fallback: simpan format asli jika konversi WebP gagal
         Log::warning('ImageService: konversi WebP gagal, menyimpan format asli.', [
             'original_name' => $file->getClientOriginalName(),
             'mime'          => $file->getMimeType(),
@@ -33,8 +32,8 @@ class ImageService
         ]);
 
         $fallbackName = $filename . '.' . $file->getClientOriginalExtension();
-        $stored = $file->storeAs($storageDir, $fallbackName);
-        $paths['url'] = str_replace('public/', '', $stored);
+        $stored = $file->storeAs($storageDir, $fallbackName, 'public');
+        $paths['url'] = $stored;
         $paths['thumbnail'] = $paths['url'];
 
         return $paths;
@@ -46,9 +45,9 @@ class ImageService
             return;
         }
 
-        $fullPath = 'public/' . ltrim($path, '/');
-        if (Storage::exists($fullPath)) {
-            Storage::delete($fullPath);
+        $cleanPath = ltrim($path, '/');
+        if (Storage::disk('public')->exists($cleanPath)) {
+            Storage::disk('public')->delete($cleanPath);
         }
     }
 
@@ -93,8 +92,8 @@ class ImageService
                 return false;
             }
 
-            $stored = Storage::putFileAs($storageDir, new \Illuminate\Http\File($webpTempPath), $webpFilename);
-            $paths['url'] = str_replace('public/', '', $stored);
+            $stored = Storage::disk('public')->putFileAs($storageDir, new \Illuminate\Http\File($webpTempPath), $webpFilename);
+            $paths['url'] = $stored;
             $paths['thumbnail'] = $paths['url'];
 
             @unlink($webpTempPath);

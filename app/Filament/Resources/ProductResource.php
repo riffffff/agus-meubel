@@ -288,6 +288,7 @@ class ProductResource extends Resource
                     ->label('Cover')
                     ->square()
                     ->size(72)
+                    ->disk('public')
                     ->checkFileExistence(false)
                     ->defaultImageUrl(url('https://placehold.co/400x400/fafaf9/78716c?text=No+Image')),
                 Tables\Columns\TextColumn::make('name')
