@@ -6,6 +6,12 @@ import { PageProps as AppPageProps } from './';
 declare global {
     interface Window {
         axios: AxiosInstance;
+        __SHOP__?: {
+            shop_name?: string | null;
+            logo_url?: string;
+            logo_dark_url?: string;
+            favicon_url?: string;
+        };
     }
 
     /* eslint-disable no-var */

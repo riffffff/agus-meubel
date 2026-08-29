@@ -6,15 +6,31 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Favicon -->
+        <!-- Favicon & Global Shop Settings -->
         @php
             try {
                 $shopSettings = \App\Models\ShopSetting::getSettings();
                 $faviconUrl   = $shopSettings->getFaviconUrl();
+                $logoLightUrl = $shopSettings->getLogoUrl('light');
+                $logoDarkUrl  = $shopSettings->getLogoUrl('dark');
+                $__shopGlobal = [
+                  'shop_name'     => $shopSettings->shop_name,
+                  'logo_url'      => $logoLightUrl,
+                  'logo_dark_url' => $logoDarkUrl,
+                  'favicon_url'   => $faviconUrl,
+                ];
             } catch (\Throwable) {
                 $faviconUrl = null;
+                $logoLightUrl = null;
+                $logoDarkUrl = null;
+                $__shopGlobal = null;
             }
         @endphp
+        @if ($__shopGlobal)
+        <script>
+            window.__SHOP__ = @json($__shopGlobal);
+        </script>
+        @endif
         @if ($faviconUrl)
         <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
         <link rel="apple-touch-icon" href="{{ $faviconUrl }}">

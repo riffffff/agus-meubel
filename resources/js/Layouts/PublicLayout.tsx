@@ -23,12 +23,24 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     const { shopSettings, auth } = usePage<PageProps>().props;
     const user = auth?.user;
     const waNumber = shopSettings?.whatsapp_number || '6281234567890';
-    const shopName = shopSettings?.shop_name || 'Agus Mebel Jepara';
+    const shopName =
+        (typeof window !== 'undefined' && (window as any).__SHOP__?.shop_name) ||
+        shopSettings?.shop_name ||
+        'Agus Mebel Jepara';
     const address = shopSettings?.address || 'Jepara, Jawa Tengah, Indonesia';
     const operatingHours = shopSettings?.operating_hours || 'Senin - Sabtu: 08:00 - 17:00';
-    // Logo URL dari setting toko (jika admin upload logo custom, akan pakai itu; fallback ke placeholder default jika null)
-    const logoUrl = shopSettings?.logo_url || window.asset('storage/logo/logo.jpeg');
-    const logoDarkUrl = shopSettings?.logo_dark_url || logoUrl;
+    // LOGO URL — UTAMAKAN window.__SHOP__ (dari app.blade, 100% fresh setiap HTML load)
+    //   -> fallback ke Inertia shared data shopSettings.logo_url
+    //   -> fallback terakhir ke placeholder default
+    const fallbackLogo = window.asset('storage/logo/logo.jpeg');
+    const logoUrl =
+        (typeof window !== 'undefined' && (window as any).__SHOP__?.logo_url) ||
+        shopSettings?.logo_url ||
+        fallbackLogo;
+    const logoDarkUrl =
+        (typeof window !== 'undefined' && (window as any).__SHOP__?.logo_dark_url) ||
+        shopSettings?.logo_dark_url ||
+        logoUrl;
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
