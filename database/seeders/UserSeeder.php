@@ -13,16 +13,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        if (User::where('email', 'admin@agusmebel.com')->doesntExist()) {
+        if (User::where('email', 'agusgerobakweb@gmail.com')->doesntExist()) {
             User::create([
                 'name'     => 'Admin Agus Mebel',
-                'email'    => 'admin@agusmebel.com',
+                'email'    => 'agusgerobakweb@gmail.com',
                 'password' => Hash::make('password123'),
                 'is_admin' => true,
             ]);
         } else {
             // Pastikan user admin yang sudah ada punya flag is_admin = true
-            User::where('email', 'admin@agusmebel.com')
+            User::where('email', 'agusgerobakweb@gmail.com')
                 ->update(['is_admin' => true]);
         }
     }

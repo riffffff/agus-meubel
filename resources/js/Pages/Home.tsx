@@ -37,7 +37,7 @@ export default function Home({ heroArticles, topProducts, reviews, shopSettings 
                 <HeroSection articles={safeHeroArticles} />
             ) : (
                 <div className="relative overflow-hidden py-16 sm:py-24 wood-texture" style={{ backgroundColor: '#4a1a0e' }}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-mahogany-950/80 via-mahogany-950/40 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-linear-to-r from-mahogany-950/80 via-mahogany-950/40 to-transparent pointer-events-none" />
                     <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             <div className="lg:col-span-6 space-y-4 text-white">

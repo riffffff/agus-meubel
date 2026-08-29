@@ -41,7 +41,9 @@ class AppServiceProvider extends ServiceProvider
             // Jika pakai Laravel >= 10 yang punya method usePublicPath
             if (method_exists($this->app, 'usePublicPath')) {
                 try {
-                    $this->app->usePublicPath($publicPath);
+                    /** @var \Illuminate\Foundation\Application $laravelApp */
+                    $laravelApp = $this->app;
+                    $laravelApp->usePublicPath($publicPath);
                 } catch (\Throwable) {
                 }
             }
@@ -50,9 +52,11 @@ class AppServiceProvider extends ServiceProvider
         // Override juga storage public root jika PUBLIC_STORAGE_PATH di-set di .env
         $storagePublic = env('PUBLIC_STORAGE_PATH');
         if ($storagePublic && $this->app->bound('config')) {
-            $currentRoot = $this->app['config']->get('filesystems.disks.public.root');
+            /** @var \Illuminate\Contracts\Config\Repository $config */
+            $config = $this->app->make('config');
+            $currentRoot = $config->get('filesystems.disks.public.root');
             if ($currentRoot === null || $currentRoot !== $storagePublic) {
-                $this->app['config']->set('filesystems.disks.public.root', $storagePublic);
+                $config->set('filesystems.disks.public.root', $storagePublic);
             }
         }
     }

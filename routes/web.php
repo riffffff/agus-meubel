@@ -9,6 +9,44 @@ use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use App\Http\Controllers\Public\ReviewController as PublicReviewController;
 use App\Http\Controllers\ProfileController;
 
+/**
+ * FALLBACK UNTUK SHARED HOSTING TANPA SYMLINK.
+ * Jika php artisan storage:link / symlink TIDAK BISA di hosting,
+ * route ini akan menangani request /storage/{path}
+ * dengan membaca file dari storage/app/public secara langsung.
+ * Lebih lambat 3-10x dari symlink/copy storage, tapi PASTI BERJALAN.
+ * Jalankan `php artisan storage:copy` untuk copy file ke public/storage (jika bisa) agar lebih cepat.
+ */
+Route::get('/storage/{path}', function (string $path) {
+    $fullPath = storage_path('app/public/' . $path);
+
+    if (! is_file($fullPath)) {
+        abort(404);
+    }
+
+    $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png'  => 'image/png',
+        'gif'  => 'image/gif',
+        'webp' => 'image/webp',
+        'svg'  => 'image/svg+xml',
+        'ico'  => 'image/x-icon',
+        'pdf'  => 'application/pdf',
+        'css'  => 'text/css',
+        'js'   => 'application/javascript',
+    ];
+    $mime = $mimeTypes[$extension] ?? mime_content_type($fullPath) ?: 'application/octet-stream';
+    $maxAge = 60 * 60 * 24 * 30; // 30 hari cache
+
+    return response()->file($fullPath, [
+        'Content-Type'  => $mime,
+        'Cache-Control' => 'public, max-age=' . $maxAge . ', immutable',
+        'Expires'       => gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT',
+    ]);
+})->where('path', '.*')->name('storage.fallback');
+
 // Public Routes — rate limited untuk mencegah scraping & DoS
 Route::middleware('throttle:public')->group(function () {
     Route::get('/', HomeController::class)->name('home');

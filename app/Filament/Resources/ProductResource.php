@@ -122,7 +122,7 @@ class ProductResource extends Resource
                                     ->columnSpanFull()
                                     ->content(function (?ProductImage $record) {
                                         $url = $record?->url;
-                                        $imageUrl = $url ? \Illuminate\Support\Facades\Storage::disk('public')->url($url) : null;
+                                        $imageUrl = $url ? asset('storage/' . $url) : null;
 
                                         if (!$imageUrl) {
                                             return new HtmlString(

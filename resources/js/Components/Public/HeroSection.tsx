@@ -53,7 +53,7 @@ export default function HeroSection({ articles }: HeroSectionProps) {
                 onMouseLeave={() => setIsPaused(false)}
             >
                 {/* Gradient overlay ringan agar teks tetap terbaca */}
-                <div className="absolute inset-0 bg-gradient-to-r from-mahogany-950/80 via-mahogany-950/40 to-transparent pointer-events-none z-0 rounded-3xl" />
+                <div className="absolute inset-0 bg-linear-to-r from-mahogany-950/80 via-mahogany-950/40 to-transparent pointer-events-none z-0 rounded-3xl" />
 
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
@@ -180,7 +180,7 @@ export default function HeroSection({ articles }: HeroSectionProps) {
                                         }`}
                                     />
                                     {/* Vignette bawah dengan warna mahogany */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-mahogany-950/50 via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-mahogany-950/50 via-transparent to-transparent" />
                                 </div>
                             );
                         })}

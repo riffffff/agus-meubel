@@ -72,7 +72,8 @@ export default function ProductCard({ product, whatsappNumber, whatsappTemplate 
 
     return (
         <div className="group bg-white rounded-2xl overflow-hidden border border-mahogany-100/60 shadow-xs hover:shadow-xl hover:border-mahogany-300/50 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
-            <Link href={route('products.show', productSlug)} className="flex flex-col grow cursor-pointer">
+            {/* Area yang bisa diklik menuju detail produk */}
+            <Link href={route('products.show', productSlug)} className="flex flex-col cursor-pointer">
 
                 {/* Gambar */}
                 <div className="relative aspect-square overflow-hidden bg-mahogany-50">
@@ -83,7 +84,7 @@ export default function ProductCard({ product, whatsappNumber, whatsappTemplate 
                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
                     {/* Vignette hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-mahogany-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-linear-to-t from-mahogany-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                     {/* Badge status */}
                     <div className="absolute top-3 left-3">
@@ -103,62 +104,71 @@ export default function ProductCard({ product, whatsappNumber, whatsappTemplate 
                     </div>
                 </div>
 
-                {/* Info produk */}
-                <div className="p-4 sm:p-5 flex flex-col grow">
+                {/* Info produk (tanpa tombol aksi) */}
+                <div className="p-4 sm:p-5 flex flex-col">
                     <h3 className="text-base font-bold text-stone-900 line-clamp-1 group-hover:text-mahogany-800 transition-colors duration-200">
                         {productName}
                     </h3>
 
-                    <p className="mt-1.5 text-xs text-stone-500 line-clamp-2 leading-relaxed grow">
+                    <p className="mt-1.5 text-xs text-stone-500 line-clamp-2 leading-relaxed">
                         {productShortDesc || 'Produk kayu jati pilihan dari pengrajin Jepara.'}
                     </p>
 
-                    <div className="mt-4 pt-3.5 border-t border-mahogany-50 flex items-center justify-between gap-2">
-                        <div>
-                            <span className="text-[10px] text-mahogany-400 block uppercase tracking-wider font-semibold">Harga</span>
-                            <span className="text-base font-extrabold text-mahogany-900 block">
-                                {formattedPrice}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 z-10" onClick={(e) => e.stopPropagation()}>
-                            {/* Tombol keranjang */}
-                            <button
-                                type="button"
-                                onClick={handleAddToCart}
-                                disabled={isAdding || status === 'out_of_stock'}
-                                className={`inline-flex items-center justify-center p-2.5 rounded-xl font-bold shadow-xs transition ${
-                                    isAdded
-                                        ? 'bg-emerald-700 text-white'
-                                        : isAdding
-                                        ? 'bg-mahogany-100 text-mahogany-700 opacity-70 cursor-wait'
-                                        : status === 'out_of_stock'
-                                        ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                                        : 'bg-mahogany-800 text-white hover:bg-mahogany-700 active:scale-95'
-                                }`}
-                                title="Tambah ke Keranjang"
-                                aria-label="Tambah ke Keranjang"
-                            >
-                                {isAdded ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-                            </button>
-
-                            {/* Tombol WhatsApp */}
-                            <a
-                                href={buildWhatsAppUrl()}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center justify-center p-2.5 rounded-xl text-white font-bold shadow-xs transition hover:opacity-90 active:scale-95"
-                                style={{ backgroundColor: '#075E54' }}
-                                title="Pesan via WhatsApp"
-                                aria-label="Pesan via WhatsApp"
-                            >
-                                <MessageCircle className="w-4 h-4" />
-                            </a>
-                        </div>
+                    <div className="mt-4 pt-3.5 border-t border-mahogany-50">
+                        <span className="text-[10px] text-mahogany-400 block uppercase tracking-wider font-semibold">Harga</span>
+                        <span className="text-base font-extrabold text-mahogany-900 block">
+                            {formattedPrice}
+                        </span>
                     </div>
                 </div>
             </Link>
+
+            {/* Tombol aksi DI LUAR <Link> agar tidak nested anchor */}
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5 mt-auto">
+                <div className="flex items-center gap-1.5">
+                    {/* Tombol keranjang */}
+                    <button
+                        type="button"
+                        onClick={handleAddToCart}
+                        disabled={isAdding || status === 'out_of_stock'}
+                        className={`inline-flex items-center justify-center flex-1 p-2.5 rounded-xl font-bold shadow-xs transition ${
+                            isAdded
+                                ? 'bg-emerald-700 text-white'
+                                : isAdding
+                                ? 'bg-mahogany-100 text-mahogany-700 opacity-70 cursor-wait'
+                                : status === 'out_of_stock'
+                                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                                : 'bg-mahogany-800 text-white hover:bg-mahogany-700 active:scale-95'
+                        }`}
+                        title="Tambah ke Keranjang"
+                        aria-label="Tambah ke Keranjang"
+                    >
+                        {isAdded ? (
+                            <span className="inline-flex items-center gap-2 text-xs">
+                                <Check className="w-4 h-4" /> Ditambahkan
+                            </span>
+                        ) : (
+                            <span className="inline-flex items-center gap-2 text-xs">
+                                <ShoppingCart className="w-4 h-4" /> Keranjang
+                            </span>
+                        )}
+                    </button>
+
+                    {/* Tombol WhatsApp */}
+                    <a
+                        href={buildWhatsAppUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center flex-1 p-2.5 rounded-xl text-white font-bold shadow-xs transition hover:opacity-90 active:scale-95"
+                        style={{ backgroundColor: '#075E54' }}
+                        title="Pesan via WhatsApp"
+                        aria-label="Pesan via WhatsApp"
+                    >
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        <span className="text-xs">Pesan WA</span>
+                    </a>
+                </div>
+            </div>
         </div>
     );
 }

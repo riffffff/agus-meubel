@@ -18,6 +18,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -35,13 +36,26 @@ class AdminPanelProvider extends PanelProvider
             $favicon   = null;
         }
 
+        $brandLogoHtml = null;
+        if ($brandLogo) {
+            $brandLogoHtml = new HtmlString(sprintf(
+                '<div class="flex items-center gap-3 px-1 py-1 select-none">
+                    <img src="%s" alt="%s" style="height: 2.5rem;" class="shrink-0 rounded-sm object-contain">
+                    <span class="text-base font-semibold tracking-tight text-gray-900 dark:text-white">%s</span>
+                </div>',
+                htmlspecialchars($brandLogo, ENT_QUOTES),
+                htmlspecialchars($brandName, ENT_QUOTES),
+                htmlspecialchars($brandName, ENT_QUOTES)
+            ));
+        }
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->brandName($brandName)
-            ->when($brandLogo, fn ($p) => $p->brandLogo($brandLogo)->brandLogoHeight('2.5rem'))
+            ->when($brandLogoHtml, fn ($p) => $p->brandLogo($brandLogoHtml))
             ->when($favicon, fn ($p) => $p->favicon($favicon))
             ->collapsibleNavigationGroups(false)
             ->colors([

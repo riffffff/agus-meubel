@@ -126,6 +126,15 @@ class ShopSetting extends Model
     }
 
     /**
+     * Hapus cache setting toko secara manual.
+     * Bisa dipanggil dari luar setelah ada perubahan.
+     */
+    public static function flushCache(): void
+    {
+        Cache::forget(self::CACHE_KEY);
+    }
+
+    /**
      * Get logo URL dengan fallback ke default.
      * 
      * @param string $mode 'light' | 'dark'

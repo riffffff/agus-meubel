@@ -46,7 +46,7 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
 
             {/* Hero Banner — mahogany + wood texture */}
             <div className="bg-mahogany-900 py-16 sm:py-20 text-center text-white relative overflow-hidden wood-texture">
-                <div className="absolute inset-0 bg-gradient-to-b from-mahogany-950/60 to-mahogany-900/30 pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-b from-mahogany-950/60 to-mahogany-900/30 pointer-events-none" />
                 <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Katalog Produk</h1>
                     <p className="text-sm sm:text-base text-mahogany-200 max-w-2xl mx-auto leading-relaxed">
