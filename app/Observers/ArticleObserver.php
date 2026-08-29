@@ -7,15 +7,40 @@ use App\Services\ImageService;
 
 class ArticleObserver
 {
+    protected array $oldPaths = [];
+
     public function __construct(
         protected ImageService $imageService
     ) {}
 
+    public function updating(Article $article): void
+    {
+        $this->oldPaths = [];
+        $fields = ['image'];
+
+        foreach ($fields as $field) {
+            if ($article->isDirty($field)) {
+                $oldValue = $article->getOriginal($field);
+                $newValue = $article->getAttribute($field);
+                if (
+                    !empty($oldValue)
+                    && $oldValue !== $newValue
+                ) {
+                    $this->oldPaths[$field] = $oldValue;
+                }
+            }
+        }
+    }
+
     public function saved(Article $article): void
     {
-        if (!$article->wasRecentlyCreated) {
-            $this->cleanupOldImages($article);
+        foreach ($this->oldPaths as $oldPath) {
+            try {
+                $this->imageService->deleteIfExists($oldPath);
+            } catch (\Throwable) {
+            }
         }
+        $this->oldPaths = [];
     }
 
     public function deleted(Article $article): void
@@ -24,30 +49,6 @@ class ArticleObserver
             try {
                 $this->imageService->deleteIfExists($article->image);
             } catch (\Throwable) {
-            }
-        }
-    }
-
-    private function cleanupOldImages(Article $article): void
-    {
-        $fields = ['image'];
-
-        foreach ($fields as $field) {
-            if (!$article->isDirty($field)) {
-                continue;
-            }
-
-            $oldValue = $article->getOriginal($field);
-            $newValue = $article->getAttribute($field);
-
-            if (
-                !empty($oldValue)
-                && $oldValue !== $newValue
-            ) {
-                try {
-                    $this->imageService->deleteIfExists($oldValue);
-                } catch (\Throwable) {
-                }
             }
         }
     }

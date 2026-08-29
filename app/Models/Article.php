@@ -35,6 +35,11 @@ class Article extends Model
         'views_count' => 'integer',
     ];
 
+    public function setImageAttribute($value): void
+    {
+        $this->attributes['image'] = is_string($value) ? ltrim($value, '/') : $value;
+    }
+
     /**
      * Increment view counter secara atomic tanpa menyentuh timestamps.
      * Menggunakan DB::table() langsung untuk menghindari race condition.

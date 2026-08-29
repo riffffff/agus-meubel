@@ -7,43 +7,44 @@ use App\Services\ImageService;
 
 class ShopSettingObserver
 {
+    protected array $oldPaths = [];
+
     public function __construct(
         protected ImageService $imageService
     ) {}
 
+    public function updating(ShopSetting $setting): void
+    {
+        $this->oldPaths = [];
+        $fields = ['logo', 'logo_dark', 'favicon'];
+
+        foreach ($fields as $field) {
+            if ($setting->isDirty($field)) {
+                $oldValue = $setting->getOriginal($field);
+                $newValue = $setting->getAttribute($field);
+                if (
+                    !empty($oldValue)
+                    && $oldValue !== $newValue
+                ) {
+                    $this->oldPaths[$field] = $oldValue;
+                }
+            }
+        }
+    }
+
     public function saved(ShopSetting $setting): void
     {
-        if (!$setting->wasRecentlyCreated) {
-            $this->cleanupOldImages($setting);
+        foreach ($this->oldPaths as $oldPath) {
+            try {
+                $this->imageService->deleteIfExists($oldPath);
+            } catch (\Throwable) {
+            }
         }
+        $this->oldPaths = [];
 
         rescue(function () use ($setting) {
             cache()->forget('shop_settings');
             cache()->forget('shop_settings:data');
         });
-    }
-
-    private function cleanupOldImages(ShopSetting $setting): void
-    {
-        $fields = ['logo', 'logo_dark', 'favicon'];
-
-        foreach ($fields as $field) {
-            if (!$setting->isDirty($field)) {
-                continue;
-            }
-
-            $oldValue = $setting->getOriginal($field);
-            $newValue = $setting->getAttribute($field);
-
-            if (
-                !empty($oldValue)
-                && $oldValue !== $newValue
-            ) {
-                try {
-                    $this->imageService->deleteIfExists($oldValue);
-                } catch (\Throwable) {
-                }
-            }
-        }
     }
 }

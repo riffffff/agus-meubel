@@ -35,6 +35,26 @@ class ShopSetting extends Model
         'shipping_areas' => 'array',
     ];
 
+    public function setLogoAttribute($value): void
+    {
+        $this->attributes['logo'] = is_string($value) ? ltrim($value, '/') : $value;
+    }
+
+    public function setLogoDarkAttribute($value): void
+    {
+        $this->attributes['logo_dark'] = is_string($value) ? ltrim($value, '/') : $value;
+    }
+
+    public function setFaviconAttribute($value): void
+    {
+        $this->attributes['favicon'] = is_string($value) ? ltrim($value, '/') : $value;
+    }
+
+    public function setHeroBannerBgAttribute($value): void
+    {
+        $this->attributes['hero_banner_bg'] = is_string($value) ? ltrim($value, '/') : $value;
+    }
+
     public const SINGLETON_ID = 1;
 
     /** Cache key dan TTL (detik) */
