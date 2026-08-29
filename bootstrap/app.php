@@ -51,9 +51,11 @@ $detectPublicPath = function () use ($basePath): ?string {
 };
 
 // Simpan hasil deteksi ke GLOBAL agar AppServiceProvider bisa mengaksesnya
-$GLOBALS['APP_PUBLIC_PATH_DETECTED'] = $detectPublicPath();
+$detectedPublicPath = $detectPublicPath();
+$GLOBALS['APP_PUBLIC_PATH_DETECTED'] = $detectedPublicPath;
 
-return Application::configure(basePath: $basePath)
+/** @var Application $app */
+$app = Application::configure(basePath: $basePath)
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -81,3 +83,28 @@ return Application::configure(basePath: $basePath)
             fn (Request $request) => $request->is('api/*'),
         );
     })->create();
+
+// ============================================================
+// OVERRIDE PUBLIC PATH (CARA PALING AWAL & TERCEPAT)
+// Override langsung di $app instance SEBELUM dikembalikan.
+// Ini work di SEMUA versi Laravel tanpa perlu withPublicPath().
+// ============================================================
+if ($detectedPublicPath !== null && is_dir($detectedPublicPath)) {
+    $app->instance('path.public', $detectedPublicPath);
+
+    // Kalau app punya method usePublicPath (Laravel 10+)
+    if (method_exists($app, 'usePublicPath')) {
+        try {
+            $app->usePublicPath($detectedPublicPath);
+        } catch (\Throwable) {
+        }
+    }
+
+    // Override juga storage public root (jika PUBLIC_STORAGE_PATH di env)
+    $storagePublicEnv = env('PUBLIC_STORAGE_PATH');
+    if ($storagePublicEnv && is_dir($storagePublicEnv) && $app->bound('config')) {
+        $app['config']->set('filesystems.disks.public.root', $storagePublicEnv);
+    }
+}
+
+return $app;

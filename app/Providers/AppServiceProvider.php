@@ -31,9 +31,12 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        // Override public path via container (kompatibel SEMUA Laravel: 8/9/10/11)
+        // Override public path via container (fallback jikalau override di bootstrap tidak jalan)
         if ($publicPath !== null) {
-            $this->app->instance('path.public', $publicPath);
+            $currentPublic = $this->app->bound('path.public') ? $this->app->make('path.public') : null;
+            if ($currentPublic !== $publicPath) {
+                $this->app->instance('path.public', $publicPath);
+            }
 
             // Jika pakai Laravel >= 10 yang punya method usePublicPath
             if (method_exists($this->app, 'usePublicPath')) {
@@ -46,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Override juga storage public root jika PUBLIC_STORAGE_PATH di-set di .env
         $storagePublic = env('PUBLIC_STORAGE_PATH');
-        if ($storagePublic) {
+        if ($storagePublic && $this->app->bound('config')) {
             $currentRoot = $this->app['config']->get('filesystems.disks.public.root');
             if ($currentRoot === null || $currentRoot !== $storagePublic) {
                 $this->app['config']->set('filesystems.disks.public.root', $storagePublic);
