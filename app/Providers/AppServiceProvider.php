@@ -15,7 +15,43 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $publicPath = null;
+
+        // Prioritas 1: override eksplisit dari .env
+        $envPath = env('APP_PUBLIC_PATH');
+        if ($envPath && is_dir($envPath)) {
+            $publicPath = $envPath;
+        }
+
+        // Prioritas 2: hasil auto-detect dari bootstrap/app.php
+        if ($publicPath === null && !empty($GLOBALS['APP_PUBLIC_PATH_DETECTED'])) {
+            $detected = $GLOBALS['APP_PUBLIC_PATH_DETECTED'];
+            if (is_dir($detected)) {
+                $publicPath = $detected;
+            }
+        }
+
+        // Override public path via container (kompatibel SEMUA Laravel: 8/9/10/11)
+        if ($publicPath !== null) {
+            $this->app->instance('path.public', $publicPath);
+
+            // Jika pakai Laravel >= 10 yang punya method usePublicPath
+            if (method_exists($this->app, 'usePublicPath')) {
+                try {
+                    $this->app->usePublicPath($publicPath);
+                } catch (\Throwable) {
+                }
+            }
+        }
+
+        // Override juga storage public root jika PUBLIC_STORAGE_PATH di-set di .env
+        $storagePublic = env('PUBLIC_STORAGE_PATH');
+        if ($storagePublic) {
+            $currentRoot = $this->app['config']->get('filesystems.disks.public.root');
+            if ($currentRoot === null || $currentRoot !== $storagePublic) {
+                $this->app['config']->set('filesystems.disks.public.root', $storagePublic);
+            }
+        }
     }
 
     public function boot(): void

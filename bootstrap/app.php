@@ -9,6 +9,9 @@ $basePath = dirname(__DIR__);
 
 /**
  * AUTO-DETECT LOKASI PUBLIC PATH untuk shared hosting.
+ * Hasil deteksi disimpan ke global $GLOBALS['APP_PUBLIC_PATH_DETECTED'],
+ * lalu akan dipakai oleh AppServiceProvider untuk bind ke container.
+ *
  * Struktur hosting Aeron Host Anda:
  *   /home/user/
  *     ├── agus-meubel/    ← Laravel (basePath)
@@ -19,17 +22,12 @@ $detectPublicPath = function () use ($basePath): ?string {
     if (!empty($_ENV['APP_PUBLIC_PATH']) && is_dir($_ENV['APP_PUBLIC_PATH'])) {
         return $_ENV['APP_PUBLIC_PATH'];
     }
-    if (!empty($GLOBALS['APP_PUBLIC_PATH']) && is_dir($GLOBALS['APP_PUBLIC_PATH'])) {
-        return $GLOBALS['APP_PUBLIC_PATH'];
-    }
 
     // 2. Cek apakah public/ di dalam project adalah folder public aktif
     //    (normal lokal, VPS, atau hosting dengan document root = project/public)
     $projectPublic = $basePath . '/public';
     if (is_file($projectPublic . '/index.php')) {
         $idx = @file_get_contents($projectPublic . '/index.php');
-        // Jika index.php didalamnya TIDAK naik 1 level ../ lagi (../bootstrap/app.php),
-        // berarti folder public/ ini adalah document root sesungguhnya
         if ($idx === false || !preg_match('#require(_once)?\s*\(?\s*[\'"]\.\./bootstrap/app\.php[\'"]#', $idx)) {
             return $projectPublic;
         }
@@ -49,18 +47,13 @@ $detectPublicPath = function () use ($basePath): ?string {
         }
     }
 
-    return null;
+    return $projectPublic; // Fallback akhir: project/public
 };
 
-$publicPath = $detectPublicPath();
+// Simpan hasil deteksi ke GLOBAL agar AppServiceProvider bisa mengaksesnya
+$GLOBALS['APP_PUBLIC_PATH_DETECTED'] = $detectPublicPath();
 
-$app = Application::configure(basePath: $basePath);
-
-if ($publicPath !== null) {
-    $app = $app->withPublicPath($publicPath);
-}
-
-return $app
+return Application::configure(basePath: $basePath)
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
