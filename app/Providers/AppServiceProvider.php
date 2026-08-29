@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Article;
 use App\Models\ProductImage;
+use App\Models\ShopSetting;
+use App\Observers\ArticleObserver;
 use App\Observers\ProductImageObserver;
+use App\Observers\ShopSettingObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -80,6 +84,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         ProductImage::observe(ProductImageObserver::class);
+        Article::observe(ArticleObserver::class);
+        ShopSetting::observe(ShopSettingObserver::class);
 
         $this->configureRateLimiting();
     }

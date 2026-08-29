@@ -12,7 +12,8 @@ class CreateProduct extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $newImages = $this->data['new_images'] ?? [];
+        $formState = $this->form->getState();
+        $newImages = $formState['new_images'] ?? [];
 
         if (!is_array($newImages)) {
             $newImages = [];

@@ -20,7 +20,8 @@ class EditProduct extends EditRecord
 
     protected function afterSave(): void
     {
-        $newImages = $this->data['new_images'] ?? [];
+        $formState = $this->form->getState();
+        $newImages = $formState['new_images'] ?? [];
 
         if (!is_array($newImages)) {
             $newImages = [];
@@ -48,5 +49,10 @@ class EditProduct extends EditRecord
                 'sort_order' => $sortOrder,
             ]);
         }
+
+        $this->form->fill([
+            ...$this->form->getState(),
+            'new_images' => [],
+        ]);
     }
 }
