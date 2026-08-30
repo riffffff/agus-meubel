@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
 use App\Models\ProductImage;
+use App\Services\ImageService;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -32,6 +33,9 @@ class EditProduct extends EditRecord
             return;
         }
 
+        /** @var ImageService $imageService */
+        $imageService = app(ImageService::class);
+
         $currentCount = ProductImage::where('product_id', $this->record->id)->count();
         $hasPrimary = ProductImage::where('product_id', $this->record->id)
             ->where('is_primary', true)
@@ -40,6 +44,12 @@ class EditProduct extends EditRecord
         foreach ($newImages as $idx => $url) {
             if (empty($url)) {
                 continue;
+            }
+            if (is_string($url)) {
+                $processed = $imageService->processUploadedPath($url, 'products');
+                if (!empty($processed)) {
+                    $url = $processed;
+                }
             }
             $sortOrder = $currentCount + $idx;
             ProductImage::create([

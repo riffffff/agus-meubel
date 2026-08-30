@@ -152,21 +152,19 @@ class ProductResource extends Resource
                             ]),
                         FileUpload::make('new_images')
                             ->label('Tambah / Unggah Gambar Baru')
-                            ->helperText('Gambar disimpan sebagai format asli ke storage/public. Tambahkan dulu gambar baru lalu klik Save Changes.')
+                            ->helperText('Gambar akan otomatis di-konversi WebP & dioptimalkan ukurannya setelah disimpan. Tambahkan dulu gambar baru lalu klik Save Changes.')
                             ->multiple()
                             ->reorderable()
                             ->appendFiles()
                             ->dehydrated(false)
                             ->image()
-                            ->imageEditor()
-                            ->imageResizeTargetWidth(1800)
-                            ->imageResizeMode('contain')
                             ->panelLayout('grid')
                             ->directory('products')
                             ->disk('public')
                             ->visibility('public')
                             ->minFiles(0)
-                            ->maxFiles(10),
+                            ->maxFiles(10)
+                            ->maxSize(10240),
                     ]),
 
                 Forms\Components\Section::make('Deskripsi')

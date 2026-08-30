@@ -55,19 +55,15 @@ class ShopSettingResource extends Resource
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios(['16:9', '4:3', '1:1'])
-                            ->maxSize(2048)
-                            ->helperText('Kosongkan untuk menggunakan logo default: public/storage/logo/logo.jpeg'),
+                            ->maxSize(5120)
+                            ->helperText('Kosongkan untuk menggunakan logo default: public/storage/logo/logo.jpeg. File akan dioptimalkan otomatis saat disimpan.'),
                         
                         Forms\Components\FileUpload::make('logo_dark')
                             ->label('Logo (Dark Mode)')
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios(['16:9', '4:3', '1:1'])
-                            ->maxSize(2048)
+                            ->maxSize(5120)
                             ->helperText('Opsional. Jika kosong, akan pakai logo light mode.'),
 
                         Forms\Components\FileUpload::make('favicon')
@@ -75,9 +71,7 @@ class ShopSettingResource extends Resource
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios(['1:1'])
-                            ->maxSize(512)
+                            ->maxSize(1024)
                             ->helperText('Icon untuk browser tab. Ukuran ideal: 32x32 atau 64x64 px'),
                     ])->columns(3)->collapsible(),
 

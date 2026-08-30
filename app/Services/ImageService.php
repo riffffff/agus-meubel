@@ -51,6 +51,70 @@ class ImageService
         }
     }
 
+    public function processUploadedPath(string $path, string $dir = 'products'): ?string
+    {
+        $cleanPath = ltrim($path, '/');
+        if (empty($cleanPath)) {
+            return null;
+        }
+
+        $disk = Storage::disk('public');
+        $absPath = $disk->path($cleanPath);
+
+        if (!$disk->exists($cleanPath) || !file_exists($absPath)) {
+            return $cleanPath;
+        }
+
+        $size = @filesize($absPath);
+        if ($size !== false && $size < 1024) {
+            Log::warning('ImageService: file uploaded filament size terlalu kecil, dianggap corrupt; skip process keep path.', [
+                'path' => $cleanPath,
+                'size' => $size,
+            ]);
+            return $cleanPath;
+        }
+
+        try {
+            $mime = mime_content_type($absPath) ?: null;
+        } catch (\Throwable) {
+            $mime = null;
+        }
+
+        if (empty($mime) || !str_starts_with($mime, 'image/')) {
+            return $cleanPath;
+        }
+
+        $originalName = basename($absPath);
+        try {
+            $uploaded = new UploadedFile(
+                $absPath,
+                $originalName,
+                $mime,
+                null,
+                true
+            );
+        } catch (\Throwable) {
+            return $cleanPath;
+        }
+
+        $paths = $this->handleUpload($uploaded, $dir);
+        $newUrl = $paths['url'] ?? null;
+
+        if (empty($newUrl)) {
+            return $cleanPath;
+        }
+
+        $newUrl = ltrim($newUrl, '/');
+        if ($newUrl !== $cleanPath) {
+            try {
+                $this->deleteIfExists($cleanPath);
+            } catch (\Throwable) {
+            }
+        }
+
+        return $newUrl;
+    }
+
     private function convertToWebp(UploadedFile $file, string $storageDir, string $filename, array &$paths): bool
     {
         $realPath = $file->getRealPath();

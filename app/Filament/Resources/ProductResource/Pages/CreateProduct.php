@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
 use App\Models\ProductImage;
+use App\Services\ImageService;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateProduct extends CreateRecord
@@ -24,9 +25,18 @@ class CreateProduct extends CreateRecord
             return;
         }
 
+        /** @var ImageService $imageService */
+        $imageService = app(ImageService::class);
+
         foreach ($newImages as $idx => $url) {
             if (empty($url)) {
                 continue;
+            }
+            if (is_string($url)) {
+                $processed = $imageService->processUploadedPath($url, 'products');
+                if (!empty($processed)) {
+                    $url = $processed;
+                }
             }
             ProductImage::create([
                 'product_id' => $this->record->id,
