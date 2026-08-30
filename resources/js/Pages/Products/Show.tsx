@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
-import ScrollReveal from '@/Components/Public/ScrollReveal';
 import { Product, ShopSetting } from '@/types/mebel';
 import { MessageCircle, ShoppingCart, UserPlus, LogIn, Lock, Minus, Plus, AlertCircle } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
@@ -45,6 +44,12 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
 
     const [activeImageUrl, setActiveImageUrl] = useState<string>(defaultImgUrl);
     const [qty, setQty] = useState<number>(1);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+
+    useEffect(() => {
+        const t = setTimeout(() => setIsMounted(true), 30);
+        return () => clearTimeout(t);
+    }, []);
 
     const { data: _cartData, setData, post: cartPost, processing, errors: cartErrors, reset: cartReset } = useForm({
         product_id: productId ?? 0,
@@ -85,10 +90,10 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                     <span className="text-stone-900 font-bold truncate">{productName}</span>
                 </nav>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div className={`grid grid-cols-1 lg:grid-cols-12 gap-10 transition-opacity duration-400 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
 
                     {/* ── Galeri Gambar ─────────────────────────── */}
-                    <ScrollReveal direction="left" className="lg:col-span-7 space-y-4">
+                    <div className="lg:col-span-7 space-y-4">
                         <div className="aspect-square bg-mahogany-50 rounded-2xl overflow-hidden border border-mahogany-100 shadow-sm relative">
                             <img src={activeImageUrl} alt={productName} className="w-full h-full object-cover object-center" />
 
@@ -127,10 +132,10 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                                 })}
                             </div>
                         )}
-                    </ScrollReveal>
+                    </div>
 
                     {/* ── Panel Pembelian ────────────────────────── */}
-                    <ScrollReveal direction="right" className="lg:col-span-5 space-y-6">
+                    <div className="lg:col-span-5 space-y-6">
 
                         {/* Judul */}
                         <div className="space-y-1.5">
@@ -207,37 +212,44 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                         ) : (
                             /* CTA — sudah login */
                             <form onSubmit={addToCartHandler} className="pt-4 space-y-4">
-                                <div>
-                                    <label className="text-xs font-bold text-stone-600 uppercase tracking-wider">Jumlah Pembelian</label>
-                                    <div className="mt-2 inline-flex items-center border border-mahogany-200 rounded-xl overflow-hidden bg-white">
-                                        <button
-                                            type="button"
-                                            onClick={() => setQty((v) => Math.max(1, v - 1))}
-                                            className="px-3.5 py-2 text-mahogany-600 hover:bg-mahogany-50 transition disabled:opacity-40"
-                                            disabled={qty <= 1}
-                                        >
-                                            <Minus className="w-4 h-4" />
-                                        </button>
-                                        <input
-                                            type="number"
-                                            min={1} max={100}
-                                            value={qty}
-                                            onChange={(e) => {
-                                                const v = parseInt(e.target.value, 10);
-                                                setQty(Number.isFinite(v) && v > 0 ? Math.min(100, v) : 1);
-                                            }}
-                                            className="w-16 px-2 py-2 text-center font-extrabold text-stone-900 border-x border-mahogany-200 focus:outline-none text-sm"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setQty((v) => Math.min(100, v + 1))}
-                                            className="px-3.5 py-2 text-mahogany-600 hover:bg-mahogany-50 transition"
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                        </button>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end p-4 sm:p-5 rounded-2xl bg-mahogany-50/50 border border-mahogany-100">
+                                    <div className="space-y-2.5">
+                                        <label className="text-xs font-bold text-stone-600 uppercase tracking-wider">
+                                            Jumlah Pembelian
+                                        </label>
+                                        <div className="inline-flex items-center border border-mahogany-200 rounded-xl overflow-hidden bg-white shadow-sm h-11">
+                                            <button
+                                                type="button"
+                                                onClick={() => setQty((v) => Math.max(1, v - 1))}
+                                                className="w-11 h-full flex items-center justify-center text-mahogany-700 hover:bg-mahogany-50 active:bg-mahogany-100 transition disabled:opacity-40 disabled:hover:bg-transparent shrink-0"
+                                                disabled={qty <= 1}
+                                            >
+                                                <Minus className="w-4.5 h-4.5 stroke-[2.5]" />
+                                            </button>
+                                            <input
+                                                type="number"
+                                                min={1} max={100}
+                                                value={qty}
+                                                onChange={(e) => {
+                                                    const v = parseInt(e.target.value, 10);
+                                                    setQty(Number.isFinite(v) && v > 0 ? Math.min(100, v) : 1);
+                                                }}
+                                                className="w-16 h-full text-center font-extrabold text-stone-900 text-base border-x border-mahogany-200 focus:outline-none bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setQty((v) => Math.min(100, v + 1))}
+                                                className="w-11 h-full flex items-center justify-center text-mahogany-700 hover:bg-mahogany-50 active:bg-mahogany-100 transition shrink-0"
+                                            >
+                                                <Plus className="w-4.5 h-4.5 stroke-[2.5]" />
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="mt-1 text-xs text-stone-500">
-                                        Total: <span className="font-extrabold text-mahogany-900">
+                                    <div className="flex flex-col items-start sm:items-end justify-end space-y-1">
+                                        <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                                            Total Harga
+                                        </span>
+                                        <span className="text-lg sm:text-xl font-extrabold text-mahogany-900 leading-none">
                                             {formatRupiah((typeof productPrice === 'number' ? productPrice : parseFloat(String(productPrice)) || 0) * qty)}
                                         </span>
                                     </div>
@@ -277,12 +289,12 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                                 </div>
                             </form>
                         )}
-                    </ScrollReveal>
+                    </div>
                 </div>
 
                 {/* Deskripsi lengkap */}
                 {productDescription && (
-                    <ScrollReveal direction="up" className="mt-14 pt-10 border-t border-mahogany-100">
+                    <div className="mt-14 pt-10 border-t border-mahogany-100">
                         <h2 className="text-lg font-extrabold text-stone-900 mb-4 border-l-4 border-mahogany-700 pl-3">
                             Deskripsi Produk
                         </h2>
@@ -290,7 +302,7 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                             className="prose prose-stone max-w-none text-stone-600 leading-relaxed text-sm space-y-3"
                             dangerouslySetInnerHTML={{ __html: productDescription }}
                         />
-                    </ScrollReveal>
+                    </div>
                 )}
             </div>
 

@@ -1,1 +1,0 @@
-import{t as e}from"./app-DJ0NgDkG.js";import{t}from"./sofa-oVtKZw7z.js";var n=e();function r(e){return(0,n.jsx)(t,{...e})}export{r as t};
