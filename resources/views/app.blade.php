@@ -48,5 +48,10 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        @if ($__shopGlobal)
+        <script>
+            window.__SHOP__ = @json($__shopGlobal);
+        </script>
+        @endif
     </body>
 </html>

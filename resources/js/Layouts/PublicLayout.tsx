@@ -273,7 +273,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             <div className="flex items-center gap-3">
                                 <div className="h-12 w-12 rounded-xl overflow-hidden bg-white/10 ring-1 ring-white/20 flex items-center justify-center shrink-0">
                                     <img
-                                        src={window.asset('storage/logo/logo.jpeg')}
+                                        src={logoUrl}
                                         alt={shopName}
                                         className="h-full w-full object-cover"
                                         onError={(e) => { e.currentTarget.style.display = 'none'; }}
