@@ -76,11 +76,14 @@ class ProductResource extends Resource
                             ->placeholder('0')
                             ->formatStateUsing(function ($state) {
                                 if ($state === null || $state === '') {
-                                    return '';
+                                    return null;
                                 }
-                                return number_format((float) $state, 0, ',', '.');
+                                return (int) round((float) $state);
                             })
                             ->dehydrateStateUsing(function ($state) {
+                                if ($state === null || $state === '') {
+                                    return 0;
+                                }
                                 if (is_string($state)) {
                                     $state = preg_replace('/[^0-9]/', '', $state);
                                 }
@@ -102,12 +105,10 @@ class ProductResource extends Resource
                     ])->columns(2),
 
                 Forms\Components\Section::make('Gambar Produk')
-                    ->description('Unggah minimal 1 gambar. Urutan gambar pertama = Gambar Utama / Cover. Anda bisa drag untuk mengurutkan. Hapus gambar lama jika ingin diganti.')
                     ->schema([
                         Forms\Components\Repeater::make('existing_images')
                             ->hiddenOn('create')
-                            ->label('Gambar Saat Ini (Klik Hapus untuk menghilangkan)')
-                            ->helperText('Centang "Jadikan Gambar Utama" pada 1 gambar saja. Drag item untuk mengubah urutan tampilan di katalog.')
+                            ->label('Gambar Saat Ini')
                             ->relationship('images')
                             ->orderColumn('sort_order')
                             ->addable(false)
@@ -146,13 +147,11 @@ class ProductResource extends Resource
                                         );
                                     }),
                                 Forms\Components\Toggle::make('is_primary')
-                                    ->label('Jadikan Gambar Utama / Cover')
-                                    ->helperText('Sistem otomatis memastikan hanya 1 gambar utama yang aktif.')
+                                    ->label('Jadikan Gambar Utama')
                                     ->columnSpanFull(),
                             ]),
                         FileUpload::make('new_images')
-                            ->label('Tambah / Unggah Gambar Baru')
-                            ->helperText('Gambar akan otomatis di-konversi WebP & dioptimalkan ukurannya setelah disimpan. Tambahkan dulu gambar baru lalu klik Save Changes.')
+                            ->label('Unggah Gambar Baru')
                             ->multiple()
                             ->reorderable()
                             ->appendFiles()

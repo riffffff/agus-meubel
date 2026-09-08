@@ -17,6 +17,7 @@ class ShopSetting extends Model
 
     protected $fillable = [
         'shop_name',
+        'description',
         'logo',
         'logo_dark',
         'favicon',
@@ -101,6 +102,10 @@ class ShopSetting extends Model
         if (empty($this->shop_name)) {
             $this->shop_name = 'Agus Mebel Jepara';
         }
+
+        if (empty($this->description)) {
+            $this->description = 'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.';
+        }
     }
 
     /**
@@ -123,6 +128,7 @@ class ShopSetting extends Model
             $settings->forceFill([
                 'id'                    => self::SINGLETON_ID,
                 'shop_name'             => 'Agus Mebel Jepara',
+                'description'           => 'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.',
                 'logo'                  => null, // Admin bisa upload, fallback ke public/storage/logo/logo.jpeg
                 'logo_dark'             => null,
                 'favicon'               => null,

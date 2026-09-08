@@ -18,9 +18,22 @@ use App\Http\Controllers\ProfileController;
  * Jalankan `php artisan storage:copy` untuk copy file ke public/storage (jika bisa) agar lebih cepat.
  */
 Route::get('/storage/{path}', function (string $path) {
-    $fullPath = storage_path('app/public/' . $path);
+    $cleanPath = ltrim($path, '/\\');
+    $candidates = array_filter([
+        storage_path('app/public/' . $cleanPath),
+        public_path('storage/' . $cleanPath),
+        env('PUBLIC_STORAGE_PATH') ? rtrim(env('PUBLIC_STORAGE_PATH'), '/\\') . '/' . $cleanPath : null,
+    ]);
 
-    if (! is_file($fullPath)) {
+    $fullPath = null;
+    foreach ($candidates as $candidate) {
+        if (is_file($candidate)) {
+            $fullPath = $candidate;
+            break;
+        }
+    }
+
+    if (! $fullPath) {
         abort(404);
     }
 

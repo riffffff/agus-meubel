@@ -49,6 +49,7 @@ class HandleInertiaRequests extends Middleware
             'shopSettings' => [
                 'id' => $shopSettings->id,
                 'shop_name' => $shopSettings->shop_name,
+                'description' => $shopSettings->description,
                 'address' => $shopSettings->address,
                 'whatsapp_number' => $shopSettings->whatsapp_number,
                 'whatsapp_template' => $shopSettings->whatsapp_template,

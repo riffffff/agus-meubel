@@ -82,6 +82,7 @@ export interface Review {
 export interface ShopSetting {
   id?: number;
   shop_name?: string | null;
+  description?: string | null;
   logo?: string | null;
   logo_dark?: string | null;
   favicon?: string | null;

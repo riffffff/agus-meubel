@@ -29,6 +29,9 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         'Agus Mebel Jepara';
     const address = shopSettings?.address || 'Jepara, Jawa Tengah, Indonesia';
     const operatingHours = shopSettings?.operating_hours || 'Senin - Sabtu: 08:00 - 17:00';
+    const shopDescription =
+        shopSettings?.description ||
+        'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.';
     // LOGO URL — UTAMAKAN window.__SHOP__ (dari app.blade, 100% fresh setiap HTML load)
     //   -> fallback ke Inertia shared data shopSettings.logo_url
     //   -> fallback terakhir ke placeholder default
@@ -284,7 +287,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 </span>
                             </div>
                             <p className="text-mahogany-400 text-sm leading-relaxed max-w-md">
-                                Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.
+                                {shopDescription}
                             </p>
                             <a
                                 href={`https://wa.me/${waNumber}`}
@@ -339,8 +342,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
                     {/* Bottom bar */}
                     <div className="mt-14 pt-8 border-t border-mahogany-900 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-mahogany-500">
-                        <p>&copy; {new Date().getFullYear()} {shopName}. All rights reserved.</p>
-                        <p>High Quality Teak Furniture — Jepara</p>
+                        <p>&copy; {new Date().getFullYear()} Paitech</p>
                     </div>
                 </div>
             </footer>

@@ -19,50 +19,57 @@ class EditProduct extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['price']) && is_string($data['price'])) {
+            $data['price'] = (int) preg_replace('/[^0-9]/', '', $data['price']);
+        }
+
+        return $data;
+    }
+
     protected function afterSave(): void
     {
-        $formState = $this->form->getState();
-        $newImages = $formState['new_images'] ?? [];
+        $rawState = method_exists($this->form, 'getRawState') ? $this->form->getRawState() : [];
+        $newImages = $this->data['new_images']
+            ?? ($rawState['new_images'] ?? [])
+            ?? ($this->form->getState()['new_images'] ?? []);
 
         if (!is_array($newImages)) {
             $newImages = [];
         }
 
         $newImages = array_values(array_filter($newImages));
-        if (count($newImages) === 0) {
-            return;
-        }
+        if (count($newImages) > 0) {
+            /** @var ImageService $imageService */
+            $imageService = app(ImageService::class);
 
-        /** @var ImageService $imageService */
-        $imageService = app(ImageService::class);
+            $currentCount = ProductImage::where('product_id', $this->record->id)->count();
+            $hasPrimary = ProductImage::where('product_id', $this->record->id)
+                ->where('is_primary', true)
+                ->exists();
 
-        $currentCount = ProductImage::where('product_id', $this->record->id)->count();
-        $hasPrimary = ProductImage::where('product_id', $this->record->id)
-            ->where('is_primary', true)
-            ->exists();
-
-        foreach ($newImages as $idx => $url) {
-            if (empty($url)) {
-                continue;
-            }
-            if (is_string($url)) {
-                $processed = $imageService->processUploadedPath($url, 'products');
-                if (!empty($processed)) {
-                    $url = $processed;
+            foreach ($newImages as $idx => $url) {
+                if (empty($url)) {
+                    continue;
                 }
+                if (is_string($url)) {
+                    $processed = $imageService->processUploadedPath($url, 'products');
+                    if (!empty($processed)) {
+                        $url = $processed;
+                    }
+                }
+                $sortOrder = $currentCount + $idx;
+                ProductImage::create([
+                    'product_id' => $this->record->id,
+                    'url'        => ltrim($url, '/'),
+                    'is_primary' => !$hasPrimary && $idx === 0,
+                    'sort_order' => $sortOrder,
+                ]);
             }
-            $sortOrder = $currentCount + $idx;
-            ProductImage::create([
-                'product_id' => $this->record->id,
-                'url'        => ltrim($url, '/'),
-                'is_primary' => !$hasPrimary && $idx === 0,
-                'sort_order' => $sortOrder,
-            ]);
         }
 
-        $this->form->fill([
-            ...$this->form->getState(),
-            'new_images' => [],
-        ]);
+        $this->record->refresh();
+        $this->fillForm();
     }
 }

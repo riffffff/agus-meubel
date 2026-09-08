@@ -15,6 +15,7 @@ class ShopSettingSeeder extends Seeder
         if (ShopSetting::count() === 0) {
             ShopSetting::create([
                 'shop_name' => 'Agus Mebel Jepara',
+                'description' => 'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.',
                 'address' => 'Jl. Tahunan - Batealit, Jepara, Jawa Tengah 59427',
                 'whatsapp_number' => '6281234567890',
                 'whatsapp_template' => "Halo, saya tertarik dengan produk *{product_name}* seharga {product_price}. Apakah masih tersedia?",

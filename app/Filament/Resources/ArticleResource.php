@@ -98,12 +98,10 @@ class ArticleResource extends Resource
                             ->placeholder('Kapan artikel diterbitkan'),
                         Forms\Components\Toggle::make('is_published')
                             ->label('Terbitkan')
-                            ->default(true)
-                            ->helperText('Jika mati, artikel jadi draf & tidak muncul di halaman publik'),
+                            ->default(true),
                         Forms\Components\Toggle::make('is_hero')
                             ->label('Hero Banner Utama')
-                            ->default(false)
-                            ->helperText('Max. 3 artikel hero aktif. Jika melebihi 3, sistem otomatis menonaktifkan artikel hero terlama.'),
+                            ->default(false),
                     ])->columns(2),
             ]);
     }

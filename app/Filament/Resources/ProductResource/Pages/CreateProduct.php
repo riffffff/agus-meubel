@@ -11,10 +11,21 @@ class CreateProduct extends CreateRecord
 {
     protected static string $resource = ProductResource::class;
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (isset($data['price']) && is_string($data['price'])) {
+            $data['price'] = (int) preg_replace('/[^0-9]/', '', $data['price']);
+        }
+
+        return $data;
+    }
+
     protected function afterCreate(): void
     {
-        $formState = $this->form->getState();
-        $newImages = $formState['new_images'] ?? [];
+        $rawState = method_exists($this->form, 'getRawState') ? $this->form->getRawState() : [];
+        $newImages = $this->data['new_images']
+            ?? ($rawState['new_images'] ?? [])
+            ?? ($this->form->getState()['new_images'] ?? []);
 
         if (!is_array($newImages)) {
             $newImages = [];

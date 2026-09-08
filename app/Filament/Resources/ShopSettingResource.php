@@ -40,39 +40,40 @@ class ShopSettingResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Contoh: Agus Mebel Jepara'),
+                        Forms\Components\Textarea::make('description')
+                            ->label('Deskripsi Toko')
+                            ->rows(3)
+                            ->maxLength(1000)
+                            ->placeholder('Contoh: Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara.'),
                         Forms\Components\Textarea::make('address')
                             ->label('Alamat Toko')
-                            ->rows(3)
+                            ->rows(2)
                             ->maxLength(1000)
                             ->placeholder('Contoh: Jepara, Jawa Tengah, Indonesia'),
                     ])->columns(1),
 
                 Forms\Components\Section::make('Logo & Branding')
-                    ->description('Upload logo kustom atau biarkan kosong untuk menggunakan logo default di public/storage/logo/')
                     ->schema([
                         Forms\Components\FileUpload::make('logo')
                             ->label('Logo (Light Mode)')
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->maxSize(5120)
-                            ->helperText('Kosongkan untuk menggunakan logo default: public/storage/logo/logo.jpeg. File akan dioptimalkan otomatis saat disimpan.'),
+                            ->maxSize(5120),
                         
                         Forms\Components\FileUpload::make('logo_dark')
                             ->label('Logo (Dark Mode)')
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->maxSize(5120)
-                            ->helperText('Opsional. Jika kosong, akan pakai logo light mode.'),
+                            ->maxSize(5120),
 
                         Forms\Components\FileUpload::make('favicon')
                             ->label('Favicon')
                             ->image()
                             ->disk('public')
                             ->directory('branding')
-                            ->maxSize(1024)
-                            ->helperText('Icon untuk browser tab. Ukuran ideal: 32x32 atau 64x64 px'),
+                            ->maxSize(1024),
                     ])->columns(3)->collapsible(),
 
                 Forms\Components\Section::make('Kontak WhatsApp')
@@ -81,15 +82,14 @@ class ShopSettingResource extends Resource
                             ->label('Nomor WhatsApp')
                             ->required()
                             ->maxLength(20)
-                            ->placeholder('Contoh: 6281234567890 atau 081234567890')
-                            ->helperText('Awali dengan 62 atau 0. Akan dikonversi otomatis ke format internasional.'),
+                            ->placeholder('Contoh: 6281234567890'),
                         Forms\Components\Textarea::make('whatsapp_template')
                             ->label('Template Pesan WhatsApp')
                             ->rows(3)
                             ->required()
                             ->maxLength(2000)
                             ->placeholder('Halo, saya tertarik dengan produk *{product_name}* seharga {product_price}. Apakah tersedia?')
-                            ->helperText('Gunakan placeholder {product_name} dan {product_price} untuk nama & harga produk otomatis.'),
+                            ->helperText('Variabel: {product_name} dan {product_price}'),
                     ])->columns(1),
 
                 Forms\Components\Section::make('Jam Operasional & Pengiriman')
