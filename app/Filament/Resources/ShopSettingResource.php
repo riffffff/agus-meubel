@@ -39,17 +39,17 @@ class ShopSettingResource extends Resource
                             ->label('Nama Toko')
                             ->required()
                             ->maxLength(255)
-                            ->placeholder('Contoh: Agus Mebel Jepara'),
+                            ->placeholder('Contoh: Agus Gerobak'),
                         Forms\Components\Textarea::make('description')
                             ->label('Deskripsi Toko')
                             ->rows(3)
                             ->maxLength(1000)
-                            ->placeholder('Contoh: Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara.'),
+                            ->placeholder('Contoh: Kami memproduksi gerobak dan meubel berkualitas untuk kebutuhan usaha dan rumah.'),
                         Forms\Components\Textarea::make('address')
                             ->label('Alamat Toko')
                             ->rows(2)
                             ->maxLength(1000)
-                            ->placeholder('Contoh: Jepara, Jawa Tengah, Indonesia'),
+                            ->placeholder('Contoh: Indonesia'),
                     ])->columns(1),
 
                 Forms\Components\Section::make('Logo & Branding')
@@ -60,7 +60,7 @@ class ShopSettingResource extends Resource
                             ->disk('public')
                             ->directory('branding')
                             ->maxSize(5120),
-                        
+
                         Forms\Components\FileUpload::make('logo_dark')
                             ->label('Logo (Dark Mode)')
                             ->image()
@@ -124,11 +124,11 @@ class ShopSettingResource extends Resource
                         Forms\Components\TextInput::make('hero_banner_text_1')
                             ->label('Teks Baris 1')
                             ->maxLength(255)
-                            ->placeholder('Contoh: Furniture Kayu Jati Premium'),
+                            ->placeholder('Contoh: Gerobak dan Meubel Berkualitas'),
                         Forms\Components\TextInput::make('hero_banner_text_2')
                             ->label('Teks Baris 2')
                             ->maxLength(255)
-                            ->placeholder('Contoh: Kualitas Terbaik Langsung dari Pengrajin Jepara'),
+                            ->placeholder('Contoh: Solusi custom untuk usaha dan kebutuhan rumah'),
                     ])->columns(2),
             ]);
     }

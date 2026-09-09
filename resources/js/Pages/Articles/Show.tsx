@@ -36,8 +36,21 @@ export default function Show({ article }: ArticleShowProps) {
         })
         : '';
 
-    const pageTitle = `${articleTitle} | Agus Mebel Jepara`;
-    const metaDescription = articleExcerpt || 'Artikel inspirasi dan tips seputar furniture kayu jati premium dari Agus Mebel Jepara.';
+    const pageTitle = `${articleTitle} | Agus Gerobak`;
+    const metaDescription = articleExcerpt || 'Artikel inspirasi dan tips seputar gerobak dan meubel dari Agus Gerobak.';
+    const canonicalUrl = route('articles.show', article.slug);
+    const articleJsonLd = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: articleTitle,
+        description: metaDescription,
+        image: imageUrl,
+        datePublished: articlePublishedAt,
+        dateModified: article.updated_at || articlePublishedAt,
+        author: { '@type': 'Organization', name: 'Agus Mebel' },
+        publisher: { '@type': 'Organization', name: 'Agus Mebel' },
+        mainEntityOfPage: canonicalUrl,
+    }).replace(/</g, '\\u003c');
 
     return (
         <PublicLayout>
@@ -48,6 +61,10 @@ export default function Show({ article }: ArticleShowProps) {
                 <meta property="og:description" content={metaDescription} />
                 <meta property="og:image" content={imageUrl} />
                 <meta property="og:type" content="article" />
+                <meta property="og:url" content={canonicalUrl} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <link rel="canonical" href={canonicalUrl} />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: articleJsonLd }} />
             </Head>
 
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
@@ -119,7 +136,7 @@ export default function Show({ article }: ArticleShowProps) {
                     <div className="mt-12 p-8 bg-stone-950 text-white rounded-3xl border border-stone-900 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="space-y-1.5 text-center md:text-left">
                             <h3 className="text-lg font-bold text-stone-100">Ingin Punya Furniture Jati Impian?</h3>
-                            <p className="text-xs text-stone-400 max-w-md leading-relaxed">Konsultasikan gratis desain furniture impian Anda dengan pengrajin kami langsung dari Jepara.</p>
+                            <p className="text-xs text-stone-400 max-w-md leading-relaxed">Konsultasikan gratis desain gerobak atau meubel impian Anda dengan tim kami.</p>
                         </div>
                         <a
                             href={`https://wa.me/${waNumber}`}

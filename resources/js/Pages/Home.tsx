@@ -17,8 +17,8 @@ interface HomeProps {
 export default function Home({ heroArticles, topProducts, reviews, shopSettings }: HomeProps) {
     const waNumber = shopSettings?.whatsapp_number || '6281234567890';
     const waTemplate = shopSettings?.whatsapp_template || '';
-    const heroTitle = shopSettings?.hero_banner_text_1 || 'Furniture Kayu Jati Premium';
-    const heroSubtitle = shopSettings?.hero_banner_text_2 || 'Kualitas Terbaik Langsung dari Pengrajin Jepara';
+    const heroTitle = shopSettings?.hero_banner_text_1 || 'Gerobak dan Meubel Berkualitas';
+    const heroSubtitle = shopSettings?.hero_banner_text_2 || 'Solusi custom untuk usaha dan kebutuhan rumah';
     const heroBg = shopSettings?.hero_banner_bg;
 
     const safeHeroArticles = Array.isArray(heroArticles) ? heroArticles.filter(Boolean) : [];
@@ -28,8 +28,8 @@ export default function Home({ heroArticles, topProducts, reviews, shopSettings 
     return (
         <PublicLayout>
             <Head>
-                <title>{`${shopSettings?.shop_name || 'Agus Mebel Jepara'} | Furniture Jati Premium`}</title>
-                <meta name="description" content="Produsen & supplier furniture kayu jati asli Jepara dengan garansi kualitas & pengiriman aman." />
+                <title>{`${shopSettings?.shop_name || 'Agus Gerobak'} | Gerobak dan Meubel Custom`}</title>
+                <meta name="description" content="Produsen gerobak dan meubel custom berkualitas untuk usaha, rumah, dan kebutuhan komersial." />
             </Head>
 
             {/* Section Hero Banner */}
@@ -42,7 +42,7 @@ export default function Home({ heroArticles, topProducts, reviews, shopSettings 
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                             <div className="lg:col-span-6 space-y-4 text-white">
                                 <span className="bg-mahogany-800/70 text-mahogany-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-mahogany-600/50 inline-block">
-                                    Jepara Quality Craftsmanship
+                                    Kualitas Gerobak dan Meubel
                                 </span>
                                 <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
                                     {heroTitle}

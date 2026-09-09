@@ -28,7 +28,7 @@ export default function HeroSection({ articles }: HeroSectionProps) {
     if (count === 0) return null;
 
     const currentArticle = validArticles[currentIndex];
-    const artTitle      = currentArticle?.title ?? 'Furniture Kayu Jati Premium';
+    const artTitle      = currentArticle?.title ?? 'Gerobak dan Meubel Berkualitas';
     const artSlug       = currentArticle?.slug ?? '';
     const artExcerpt    = currentArticle?.excerpt ?? '';
     const artPublishedAt = currentArticle?.published_at ?? '';

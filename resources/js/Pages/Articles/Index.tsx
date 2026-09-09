@@ -22,8 +22,8 @@ export default function Index({ articles }: ArticlesIndexProps) {
     return (
         <PublicLayout>
             <Head>
-                <title>Artikel & Inspirasi Mebel Kayu Jati | Agus Mebel</title>
-                <meta name="description" content="Tips memilih furniture, inspirasi dekorasi rumah, dan panduan perawatan furniture kayu jati asli dari Jepara." />
+                <title>Artikel & Inspirasi Gerobak dan Meubel | Agus Gerobak</title>
+                <meta name="description" content="Tips memilih gerobak dan meubel, inspirasi desain usaha, serta panduan perawatan produk agar tahan lama." />
             </Head>
 
             {/* Hero Banner */}

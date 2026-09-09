@@ -246,7 +246,7 @@ Artisan::command('generate:placeholder-images {--force : Overwrite jika file sud
     $produkNama = [
         1 => ['KURSI TAMU JATI', 'MINIMALIS'],
         2 => ['MEJA MAKAN JATI', 'SET 6 KURSI'],
-        3 => ['LEMARI PAKAIAN', 'UKIR JEPARA'],
+        3 => ['LEMARI PAKAIAN', 'UKIR KAYU'],
         4 => ['TEMPAT TIDUR', 'KING SIZE 180x200'],
         5 => ['RAK BUKU RETRO', 'SCANDINAVIAN'],
         6 => ['MEJA BELAJAR JATI', 'DRAWER 2 SUSUN'],
@@ -265,7 +265,7 @@ Artisan::command('generate:placeholder-images {--force : Overwrite jika file sud
     $artNama = [
         1 => ['TIPS MERAWAT', 'FURNITURE KAYU JATI'],
         2 => ['TREN INTERIOR', 'TAHUN 2026'],
-        3 => ['KEUNGGULAN', 'KAYU JATI JEPARA'],
+        3 => ['KEUNGGULAN', 'KAYU JATI PILIHAN'],
         4 => ['PADU WARNA', 'FURNITURE & CAT'],
         5 => ['TATA RUANG', 'TAMU SEMOGA LEBIH LUAS'],
     ];
@@ -278,9 +278,9 @@ Artisan::command('generate:placeholder-images {--force : Overwrite jika file sud
 
     // --- Placeholder LOGO (light mode & dark mode) + FAVICON ---
     // Light mode: latar coklat gelap, teks putih (untuk header gelap)
-    $mk('logo/logo.jpeg', 480, 140, '#784828', '#FFF8E7', 'Agus Mebel', 'Jepara Premium');
+    $mk('logo/logo.jpeg', 480, 140, '#784828', '#FFF8E7', 'Agus Gerobak', 'Gerobak & Meubel');
     // Dark mode: latar krem muda, teks coklat tua (untuk header putih/terang)
-    $mk('logo/logo-dark.jpeg', 480, 140, '#FFF8E7', '#784828', 'Agus Mebel', 'Jepara Premium');
+    $mk('logo/logo-dark.jpeg', 480, 140, '#FFF8E7', '#784828', 'Agus Gerobak', 'Gerobak & Meubel');
     // Favicon
     $mk('logo/favicon.png', 64, 64, '#784828', '#FFF8E7', 'AM', null);
 

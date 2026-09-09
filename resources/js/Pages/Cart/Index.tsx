@@ -64,7 +64,7 @@ export default function Index({ cart, shopSettings }: CartIndexProps) {
 
     return (
         <PublicLayout>
-            <Head title={`Keranjang Belanja | ${shopSettings?.shop_name || 'Agus Mebel Jepara'}`} />
+            <Head title={`Keranjang Belanja | ${shopSettings?.shop_name || 'Agus Gerobak'}`} />
 
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 <nav className="text-xs sm:text-sm text-stone-500 mb-6 flex items-center gap-2" aria-label="Breadcrumb">

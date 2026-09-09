@@ -111,7 +111,7 @@ export default function ProductCard({ product, whatsappNumber, whatsappTemplate 
                     </h3>
 
                     <p className="mt-1.5 text-xs text-stone-500 line-clamp-2 leading-relaxed">
-                        {productShortDesc || 'Produk kayu jati pilihan dari pengrajin Jepara.'}
+                        {productShortDesc || 'Produk gerobak dan meubel pilihan untuk kebutuhan usaha dan rumah.'}
                     </p>
 
                     <div className="mt-4 pt-3.5 border-t border-mahogany-50">

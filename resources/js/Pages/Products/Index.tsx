@@ -40,8 +40,8 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
     return (
         <PublicLayout>
             <Head>
-                <title>Katalog Produk Mebel Jati Jepara | Agus Mebel</title>
-                <meta name="description" content="Jelajahi koleksi lengkap furniture kayu jati premium kami. Tersedia kursi tamu, meja makan, tempat tidur, lemari, dll." />
+                <title>Katalog Gerobak dan Meubel | Agus Gerobak</title>
+                <meta name="description" content="Jelajahi koleksi gerobak dan meubel berkualitas untuk usaha, rumah, toko, dan kebutuhan custom." />
             </Head>
 
             {/* Hero Banner — mahogany + wood texture */}
@@ -50,7 +50,7 @@ export default function Index({ products, shopSettings, filters }: ProductsIndex
                 <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Katalog Produk</h1>
                     <p className="text-sm sm:text-base text-mahogany-200 max-w-2xl mx-auto leading-relaxed">
-                        Pilih dari ratusan desain furniture jepara berkualitas tinggi untuk melengkapi keindahan setiap ruangan rumah Anda.
+                        Pilih berbagai desain gerobak dan meubel berkualitas untuk melengkapi kebutuhan usaha dan rumah Anda.
                     </p>
                 </div>
             </div>

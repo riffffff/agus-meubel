@@ -26,12 +26,12 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     const shopName =
         (typeof window !== 'undefined' && (window as any).__SHOP__?.shop_name) ||
         shopSettings?.shop_name ||
-        'Agus Mebel Jepara';
-    const address = shopSettings?.address || 'Jepara, Jawa Tengah, Indonesia';
+        'Agus Gerobak';
+    const address = shopSettings?.address || 'Indonesia';
     const operatingHours = shopSettings?.operating_hours || 'Senin - Sabtu: 08:00 - 17:00';
     const shopDescription =
         shopSettings?.description ||
-        'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.';
+        'Kami memproduksi gerobak dan meubel berkualitas untuk kebutuhan usaha, rumah, dan pesanan custom.';
     // LOGO URL — UTAMAKAN window.__SHOP__ (dari app.blade, 100% fresh setiap HTML load)
     //   -> fallback ke Inertia shared data shopSettings.logo_url
     //   -> fallback terakhir ke placeholder default

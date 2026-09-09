@@ -100,11 +100,11 @@ class ShopSetting extends Model
         }
 
         if (empty($this->shop_name)) {
-            $this->shop_name = 'Agus Mebel Jepara';
+            $this->shop_name = 'Agus Gerobak';
         }
 
         if (empty($this->description)) {
-            $this->description = 'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.';
+            $this->description = 'Kami memproduksi gerobak dan meubel berkualitas untuk kebutuhan usaha, rumah, dan pesanan custom.';
         }
     }
 
@@ -127,17 +127,17 @@ class ShopSetting extends Model
             $settings = new static();
             $settings->forceFill([
                 'id'                    => self::SINGLETON_ID,
-                'shop_name'             => 'Agus Mebel Jepara',
-                'description'           => 'Kami memproduksi furniture kayu jati kualitas terbaik langsung dari pengrajin Jepara. Melayani pemesanan retail maupun custom order.',
+                'shop_name'             => 'Agus Gerobak',
+                'description'           => 'Kami memproduksi gerobak dan meubel berkualitas untuk kebutuhan usaha, rumah, dan pesanan custom.',
                 'logo'                  => null, // Admin bisa upload, fallback ke public/storage/logo/logo.jpeg
                 'logo_dark'             => null,
                 'favicon'               => null,
-                'address'               => 'Jepara, Jawa Tengah, Indonesia',
+                'address'               => 'Indonesia',
                 'whatsapp_number'       => '6281234567890',
                 'whatsapp_template'     => 'Halo, saya tertarik dengan produk *{product_name}* seharga {product_price}. Apakah tersedia?',
                 'operating_hours'       => 'Senin - Sabtu: 08:00 - 17:00',
-                'hero_banner_text_1'    => 'Furniture Kayu Jati Premium',
-                'hero_banner_text_2'    => 'Kualitas Terbaik Langsung dari Pengrajin Jepara',
+                'hero_banner_text_1'    => 'Gerobak dan Meubel Berkualitas',
+                'hero_banner_text_2'    => 'Solusi custom untuk usaha dan kebutuhan rumah',
                 'hero_banner_bg'        => null,
                 'shipping_areas'        => ['Seluruh Indonesia'],
                 'shipping_estimate_days'=> '7 - 14 hari kerja',
@@ -162,22 +162,22 @@ class ShopSetting extends Model
 
     /**
      * Get logo URL dengan fallback ke default.
-     * 
+     *
      * @param string $mode 'light' | 'dark'
      * @return string
      */
     public function getLogoUrl(string $mode = 'light'): string
     {
         $logoField = $mode === 'dark' ? 'logo_dark' : 'logo';
-        
+
         // Jika ada logo dari admin, gunakan itu
         if (!empty($this->$logoField)) {
             return asset('storage/' . $this->$logoField);
         }
 
         // Fallback ke logo default di public
-        $defaultLogo = $mode === 'dark' 
-            ? 'storage/logo/logo-dark.jpeg' 
+        $defaultLogo = $mode === 'dark'
+            ? 'storage/logo/logo-dark.jpeg'
             : 'storage/logo/logo.jpeg';
 
         // Cek apakah file default ada

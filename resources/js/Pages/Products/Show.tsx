@@ -64,6 +64,26 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
     };
 
     const formattedPrice = formatRupiah(productPrice);
+    const canonicalUrl = route('products.show', product.slug);
+    const productJsonLd = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: productName,
+        description: productShortDesc || productDescription,
+        image: productImages.map((image) => image?.url).filter(Boolean),
+        sku: productId ? String(productId) : undefined,
+        offers: {
+            '@type': 'Offer',
+            url: canonicalUrl,
+            priceCurrency: 'IDR',
+            price: productPrice,
+            availability: productStockStatus === 'available'
+                ? 'https://schema.org/InStock'
+                : productStockStatus === 'out_of_stock'
+                    ? 'https://schema.org/OutOfStock'
+                    : 'https://schema.org/PreOrder',
+        },
+    }).replace(/</g, '\\u003c');
 
     const buildWhatsAppUrl = () => {
         const text = waTemplate
@@ -75,8 +95,15 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
     return (
         <PublicLayout>
             <Head>
-                <title>{`${productName} | ${shopSettings?.shop_name || 'Agus Mebel Jepara'}`}</title>
-                <meta name="description" content={productShortDesc || 'Furniture kayu jati premium dari pengrajin Jepara.'} />
+                <title>{`${productName} | ${shopSettings?.shop_name || 'Agus Gerobak'}`}</title>
+                <meta name="description" content={productShortDesc || 'Gerobak dan meubel berkualitas untuk usaha, rumah, dan pesanan custom.'} />
+                <link rel="canonical" href={canonicalUrl} />
+                <meta property="og:title" content={`${productName} | ${shopSettings?.shop_name || 'Agus Gerobak'}`} />
+                <meta property="og:description" content={productShortDesc || 'Gerobak dan meubel berkualitas untuk usaha, rumah, dan pesanan custom.'} />
+                <meta property="og:type" content="product" />
+                <meta property="og:image" content={defaultImgUrl} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: productJsonLd }} />
             </Head>
 
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -157,7 +184,7 @@ export default function Show({ product, shopSettings }: ProductShowProps) {
                         <div className="space-y-2">
                             <h3 className="font-bold text-stone-800 text-xs uppercase tracking-wider border-b border-mahogany-100 pb-2">Keterangan Singkat</h3>
                             <p className="text-stone-600 text-sm leading-relaxed">
-                                {productShortDesc || 'Produk buatan pengrajin Jepara menggunakan kayu jati pilihan.'}
+                                {productShortDesc || 'Produk gerobak dan meubel berkualitas untuk kebutuhan usaha dan rumah.'}
                             </p>
                         </div>
 

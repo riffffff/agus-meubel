@@ -7,7 +7,50 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Public\ArticleController as PublicArticleController;
 use App\Http\Controllers\Public\ReviewController as PublicReviewController;
+use App\Models\Article;
+use App\Models\Product;
 use App\Http\Controllers\ProfileController;
+
+Route::get('/robots.txt', function () {
+    return response("User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /dashboard\nDisallow: /profile\nDisallow: /keranjang\nDisallow: /cart\nDisallow: /login\nDisallow: /register\nSitemap: " . url('/sitemap.xml') . "\n", 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ]);
+})->name('robots');
+
+Route::get('/sitemap.xml', function () {
+    $urls = collect([
+        ['loc' => route('home'), 'lastmod' => now()],
+        ['loc' => route('products.index'), 'lastmod' => null],
+        ['loc' => route('articles.index'), 'lastmod' => null],
+    ]);
+
+    Product::where('is_published', true)
+        ->get(['slug', 'updated_at'])
+        ->each(fn (Product $product) => $urls->push([
+            'loc' => route('products.show', $product->slug),
+            'lastmod' => $product->updated_at,
+        ]));
+
+    Article::published()
+        ->get(['slug', 'updated_at'])
+        ->each(fn (Article $article) => $urls->push([
+            'loc' => route('articles.show', $article->slug),
+            'lastmod' => $article->updated_at,
+        ]));
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    foreach ($urls as $url) {
+        $xml .= '<url><loc>' . e($url['loc']) . '</loc>';
+        if ($url['lastmod']) {
+            $xml .= '<lastmod>' . $url['lastmod']->toAtomString() . '</lastmod>';
+        }
+        $xml .= '</url>';
+    }
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+})->name('sitemap');
 
 /**
  * FALLBACK UNTUK SHARED HOSTING TANPA SYMLINK.
