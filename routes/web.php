@@ -38,7 +38,7 @@ Route::get('/sitemap.xml', function () {
             'lastmod' => $article->updated_at,
         ]));
 
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     foreach ($urls as $url) {
         $xml .= '<url><loc>' . e($url['loc']) . '</loc>';
